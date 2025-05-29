@@ -1,4 +1,4 @@
-package com.naruto.demo;
+package com.naruto;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
