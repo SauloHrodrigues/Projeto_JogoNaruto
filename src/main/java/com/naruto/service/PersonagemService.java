@@ -1,9 +1,9 @@
 package com.naruto.service;
 
-import com.naruto.dto.NovoPersonagemDTO;
-import com.naruto.dto.PersonagemResponseDto;
+import com.naruto.dto.jogo.NovoJogo;
+import com.naruto.dto.personagem.NovoPersonagemDTO;
+import com.naruto.dto.personagem.PersonagemResponseDto;
 import com.naruto.dto.jutsu.JutsuRequestDto;
-import com.naruto.model.Jutsu;
 import java.util.List;
 
 public interface PersonagemService {
