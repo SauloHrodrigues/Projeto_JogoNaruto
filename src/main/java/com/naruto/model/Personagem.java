@@ -19,10 +19,10 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "personagens")
+@Table(name = "personagem")
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-@DiscriminatorColumn(name = "tipo_de_ninja")
+@DiscriminatorColumn(name = "categoria_ninja")
 public abstract class Personagem {
 
     @Id
