@@ -1,8 +1,9 @@
 package com.naruto.service.implementacao;
 
+import com.naruto.dto.jutsu.JutsuRequestDto;
 import com.naruto.dto.personagem.NovoPersonagemDTO;
 import com.naruto.dto.personagem.PersonagemResponseDto;
-import com.naruto.dto.jutsu.JutsuRequestDto;
+import com.naruto.exceptions.personagem.JogadorNaoCadastradoException;
 import com.naruto.mappers.JutsuMapper;
 import com.naruto.mappers.PersonagemMapper;
 import com.naruto.model.Jutsu;
@@ -72,12 +73,12 @@ public class PersonagemServiceImp implements PersonagemService {
     }
 
     protected Personagem buscarPersonagem(Long id){
-        return repository.findById(id).orElseThrow(()-> new RuntimeException("Personagem " +
-                "não encontrao."));
+        return repository.findById(id).orElseThrow(()->new JogadorNaoCadastradoException(
+                "O personagem com ID \' " + id +"\' não foi encontrado."));
     }
     protected Personagem buscarPersonagem(String nome){
-        return repository.findByNome(nome).orElseThrow(()-> new RuntimeException("Personagem " +
-                "não encontrao."));
+        return repository.findByNome(nome).orElseThrow(()-> new JogadorNaoCadastradoException(
+                "O personagem com o nome \' " + nome+"\'  foi encontrado."));
     }
 
 }
