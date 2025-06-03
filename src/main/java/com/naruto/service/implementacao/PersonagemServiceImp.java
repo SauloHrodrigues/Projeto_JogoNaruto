@@ -14,6 +14,7 @@ import com.naruto.service.PersonagemService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -64,6 +65,8 @@ public class PersonagemServiceImp implements PersonagemService {
                 dto.chakra(), dto.vida(), dto.jutsuRequestDto()
         );
     }
+
+
     protected JutsuRequestDto normalize(JutsuRequestDto dto){
         return new JutsuRequestDto(
                 dto.nome().toLowerCase(),
@@ -72,6 +75,11 @@ public class PersonagemServiceImp implements PersonagemService {
         );
     }
 
+
+    protected Jutsu retornaJutsu(Long id){
+        return jutsuRepository.findById(id).orElseThrow(()->new RuntimeException(
+                "O jutsu com ID \' " + id +"\' não foi encontrado."));
+    }
     protected Personagem buscarPersonagem(Long id){
         return repository.findById(id).orElseThrow(()->new JogadorNaoCadastradoException(
                 "O personagem com ID \' " + id +"\' não foi encontrado."));

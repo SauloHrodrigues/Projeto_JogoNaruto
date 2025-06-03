@@ -1,4 +1,4 @@
-package com.naruto.dto;
+package com.naruto.dto.personagem;
 
 import com.naruto.dto.jutsu.JutsuResponseDto;
 import com.naruto.model.Jutsu;
@@ -8,6 +8,7 @@ import java.util.Map;
 public record PersonagemResponseDto(
         Long id,
         String nome,
+        String categoriaNinja,
         int chakra,
         int vida,
         List<JutsuResponseDto> jutsus

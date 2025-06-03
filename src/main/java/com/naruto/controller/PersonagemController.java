@@ -1,9 +1,8 @@
 package com.naruto.controller;
 
-import com.naruto.dto.NovoPersonagemDTO;
-import com.naruto.dto.PersonagemResponseDto;
 import com.naruto.dto.jutsu.JutsuRequestDto;
-import com.naruto.enuns.CategoriaNinja;
+import com.naruto.dto.personagem.NovoPersonagemDTO;
+import com.naruto.dto.personagem.PersonagemResponseDto;
 import com.naruto.service.PersonagemService;
 import java.util.List;
 import lombok.RequiredArgsConstructor;

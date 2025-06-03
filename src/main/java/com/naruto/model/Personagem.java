@@ -3,6 +3,7 @@ package com.naruto.model;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -30,7 +31,7 @@ public abstract class Personagem {
     private Long id;
     private String nome;
 
-    @OneToMany(mappedBy = "personagem", cascade = CascadeType.ALL, orphanRemoval = true)
+    @OneToMany(mappedBy = "personagem", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
     private List<Jutsu> jutsus = new ArrayList<>();
 
     private int chakra;
