@@ -3,22 +3,26 @@ package com.naruto.service.implementacao;
 import com.naruto.dto.jutsu.JutsuRequestDto;
 import com.naruto.dto.personagem.NovoPersonagemDTO;
 import com.naruto.dto.personagem.PersonagemResponseDto;
-import com.naruto.exceptions.personagem.JogadorNaoCadastradoException;
+import com.naruto.exceptions.Jogo.JogadorForaDoJogoException;
+import com.naruto.exceptions.personagem.JutsuJaExistenteEncontradoException;
+import com.naruto.exceptions.personagem.JutsuNaoEncontradoException;
+import com.naruto.exceptions.personagem.PersonagemNaoEncontradoException;
 import com.naruto.mappers.JutsuMapper;
 import com.naruto.mappers.PersonagemMapper;
 import com.naruto.model.Jutsu;
 import com.naruto.model.Personagem;
 import com.naruto.repository.JutsuRepository;
 import com.naruto.repository.PersonagemRepository;
+import com.naruto.service.IPersonagem;
 import com.naruto.service.PersonagemService;
 import java.util.List;
+import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class PersonagemServiceImp implements PersonagemService {
+public class PersonagemServiceImp implements PersonagemService, IPersonagem {
 
     private final PersonagemMapper personagemMapper;
     private final JutsuMapper jutsuMapper;
@@ -38,24 +42,33 @@ public class PersonagemServiceImp implements PersonagemService {
     }
 
     public PersonagemResponseDto adicionarJutsu(Long id, JutsuRequestDto jutsuDto){
-        Personagem personagem = buscarPersonagem(id);
+        Personagem personagem = buscar(id);
         salvarJutsu(personagem, normalize(jutsuDto));
-        return null; //personagemMapper.toResponseDto(personagem);
+        return personagemMapper.toResponseDto(personagem);
     }
 
     public void apagar(Long id){
-        Personagem personagem = buscarPersonagem(id);
+        Personagem personagem = buscar(id);
         repository.delete(personagem);
     }
 
 
     private Jutsu salvarJutsu(Personagem personagem, JutsuRequestDto jutsuDto){
+        validarSeJutsuJaExiste(jutsuDto.nome());
         Jutsu jutsu = jutsuMapper.toEntity(jutsuDto);
         jutsuRepository.save(jutsu);
         jutsu.setPersonagem(personagem);
         personagem.adicionarJutsu(jutsu);
         repository.save(personagem);
         return jutsu;
+    }
+
+    public void validarSeJutsuJaExiste(String nome){
+        Optional<Jutsu> jutsu= jutsuRepository.findByNome(nome);
+
+        if(jutsu.isPresent()){
+            throw new JutsuJaExistenteEncontradoException("O Jutsu já existe no banco.");
+        }
     }
 
     protected NovoPersonagemDTO normalize(NovoPersonagemDTO dto){
@@ -74,18 +87,26 @@ public class PersonagemServiceImp implements PersonagemService {
                 dto.consumoDeChakra()
         );
     }
+    @Override
+    public void salvar(Personagem personagem){
+        repository.save(personagem);
+    }
 
-
-    protected Jutsu retornaJutsu(Long id){
+    @Override
+    public Jutsu buscarJutsu(Long id){
         return jutsuRepository.findById(id).orElseThrow(()->new RuntimeException(
                 "O jutsu com ID \' " + id +"\' não foi encontrado."));
     }
-    protected Personagem buscarPersonagem(Long id){
-        return repository.findById(id).orElseThrow(()->new JogadorNaoCadastradoException(
-                "O personagem com ID \' " + id +"\' não foi encontrado."));
+
+    @Override
+    public Personagem buscar(Long id){
+        return repository.findById(id).orElseThrow(()->new PersonagemNaoEncontradoException(
+                "O personagem com id: \'" + id +"\' não foi encontrado."));
     }
-    protected Personagem buscarPersonagem(String nome){
-        return repository.findByNome(nome).orElseThrow(()-> new JogadorNaoCadastradoException(
+
+    @Override
+    public Personagem buscar(String nome){
+        return repository.findByNome(nome).orElseThrow(()-> new JogadorForaDoJogoException(
                 "O personagem com o nome \' " + nome+"\'  foi encontrado."));
     }
 

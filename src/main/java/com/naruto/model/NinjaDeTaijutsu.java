@@ -7,8 +7,10 @@ import jakarta.persistence.Entity;
 @DiscriminatorValue("NINJA_DE_TAIJUTSU")
 public class NinjaDeTaijutsu extends Personagem  {
     @Override
-    public void usarJutsu(Jutsu jutsu) {
-        System.out.println("o personagem está usando um golpe de Taijutsu.");
+    public String usarJutsu(Jutsu jutsu, String nomeDoOponente) {
+        return "O ninja de TAIJUTSU: "+getNome()+", infere o jutso:"+
+                jutsu.getNome().toUpperCase()+" contra o inimigo: "+
+                nomeDoOponente+" para causar danos.";
     }
 
     @Override

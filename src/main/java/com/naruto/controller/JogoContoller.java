@@ -1,6 +1,7 @@
 package com.naruto.controller;
 
-import com.naruto.dto.jogo.AtaqueDto;
+import com.naruto.dto.jogo.AtaqueRequestDto;
+import com.naruto.dto.jogo.AtaqueResponseDto;
 import com.naruto.dto.jogo.NovoJogoDto;
 import com.naruto.dto.personagem.PersonagemResponseDto;
 import com.naruto.service.JogoService;
@@ -26,8 +27,13 @@ public class JogoContoller {
     }
 
     @PostMapping("/atacar")
-    public ResponseEntity atacarDeJutsu(@RequestBody AtaqueDto dto) {
-        service.atacarDeJutsu(dto);
+    public ResponseEntity atacarDeJutsu(@RequestBody AtaqueRequestDto dto) {
+        AtaqueResponseDto ataqueDeJutsu = service.atacarDeJutsu(dto);
+        return ResponseEntity.status(HttpStatus.OK).body(ataqueDeJutsu);
+    }
+    @PostMapping("/desviar")
+    public ResponseEntity desviar() {
+        service.desviar();
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
     

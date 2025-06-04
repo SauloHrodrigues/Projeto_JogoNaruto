@@ -1,5 +1,6 @@
 package com.naruto.model;
 
+import com.naruto.enuns.CategoriaNinja;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 
@@ -9,8 +10,10 @@ public class NinjaDeGenjutsu extends Personagem {
 
 
     @Override
-    public void usarJutsu(Jutsu jutsu) {
-
+    public String usarJutsu(Jutsu jutsu, String nomeDoOponente) {
+        return "O ninja de GENJUTSU: "+getNome()+", infere o jutso:"+
+                jutsu.getNome().toUpperCase()+" contra o inimigo: "+
+                nomeDoOponente+" para causar danos.";
     }
 
     @Override

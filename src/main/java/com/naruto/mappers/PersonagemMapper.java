@@ -35,8 +35,8 @@ public interface PersonagemMapper {
 
     default void copyCommonFields(NovoPersonagemDTO dto, Personagem personagem) {
         personagem.setNome(dto.nome());
-        personagem.setVida(dto.vida());
-        personagem.setChakra(dto.chakra());
+        personagem.aumentarVidas(dto.vida());
+        personagem.adicionarChakra(dto.chakra());
     }
 
     default String categoriaNinja(Personagem personagem) {
