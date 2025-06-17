@@ -15,7 +15,6 @@ public class NinjaDeTaijutsu extends Personagem  {
 
     @Override
     public String desviar() {
-        System.out.println("o personagem está desviando de um ataque usando sua habilidade em Taijutsu");
-        return null;
+        return "O ninja de TAIJUTSU, ";
     }
 }

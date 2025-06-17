@@ -11,4 +11,5 @@ public interface IPersonagem {
     public Personagem buscar(Long id);
 
     public Personagem buscar(String nome);
+
 }

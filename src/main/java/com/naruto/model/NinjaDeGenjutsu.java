@@ -18,6 +18,6 @@ public class NinjaDeGenjutsu extends Personagem {
 
     @Override
     public String desviar() {
-        return null;
+        return "O ninja de GENJUTSU, ";
     }
 }

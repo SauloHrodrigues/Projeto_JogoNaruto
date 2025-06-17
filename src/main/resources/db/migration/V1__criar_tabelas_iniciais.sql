@@ -36,16 +36,16 @@ VALUES ('soco', 10, 5, (SELECT MAX(id) FROM personagem));
 
 -- Personagem 2
 INSERT INTO personagem (nome, chakra, vida, categoria_ninja)
-VALUES ('combatente01', 10, 10, 'NINJA_DE_NINJUTSU');
+VALUES ('combatente01', 100, 100, 'NINJA_DE_NINJUTSU');
 
 INSERT INTO jutsu (nome, dano, consumo_de_chakra, personagem_id)
 VALUES
-('chute', 10, 5, (SELECT MAX(id) FROM personagem)),
+('chute', 10, 20, (SELECT MAX(id) FROM personagem)),
 ('murro', 10, 5, (SELECT MAX(id) FROM personagem));
 
 -- Personagem 3
 INSERT INTO personagem (nome, chakra, vida, categoria_ninja)
-VALUES ('combatente02', 10, 10, 'NINJA_DE_GENJUTSU');
+VALUES ('combatente02', 100, 100, 'NINJA_DE_GENJUTSU');
 
 INSERT INTO jutsu (nome, dano, consumo_de_chakra, personagem_id)
 VALUES

@@ -56,7 +56,7 @@ public abstract class Personagem {
         this.chakra -= chakra;
     }
 
-    public void diminuirVidas(int vidas){
+    public void diminuirVidas(int vidas) {
         if((this.vida - vidas)<=0){
             this.vida = 0;
         } else {

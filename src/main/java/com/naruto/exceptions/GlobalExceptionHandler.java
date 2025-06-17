@@ -1,7 +1,10 @@
 package com.naruto.exceptions;
 
+import com.naruto.exceptions.Jogo.InaptoParaDefesaException;
 import com.naruto.exceptions.Jogo.InsuficienciaDeChakrasException;
 import com.naruto.exceptions.Jogo.JogadorForaDoJogoException;
+import com.naruto.exceptions.Jogo.JogoInativoException;
+import com.naruto.exceptions.Jogo.JogoPendenteException;
 import com.naruto.exceptions.Jogo.JutsuNaoPertenceAoJogadoException;
 import com.naruto.exceptions.personagem.PersonagemNaoEncontradoException;
 import org.springframework.http.HttpStatus;
@@ -27,6 +30,21 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(InsuficienciaDeChakrasException.class)
     public ResponseEntity<Object> handlerInsuficienciaDeChakrasException(InsuficienciaDeChakrasException ex){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("Erro. ", ex.getMessage()));
+    }
+
+    @ExceptionHandler(InaptoParaDefesaException.class)
+    public ResponseEntity<Object> handlerInaptoParaDefesaException(InaptoParaDefesaException ex){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("Erro. ", ex.getMessage()));
+    }
+
+   @ExceptionHandler(JogoInativoException.class)
+    public ResponseEntity<Object> handlerJogoInativoException (JogoInativoException  ex){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("Erro. ", ex.getMessage()));
+    }
+
+@ExceptionHandler(JogoPendenteException.class)
+    public ResponseEntity<Object> handlerJogoPendenteException (JogoPendenteException  ex){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("Erro. ", ex.getMessage()));
     }
 
