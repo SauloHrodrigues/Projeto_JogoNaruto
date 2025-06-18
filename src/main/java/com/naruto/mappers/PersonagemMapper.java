@@ -2,6 +2,7 @@ package com.naruto.mappers;
 
 import com.naruto.dto.personagem.NovoPersonagemDTO;
 import com.naruto.dto.personagem.PersonagemResponseDto;
+import com.naruto.model.NinjaDeGenjutsu;
 import com.naruto.model.NinjaDeNinjutsu;
 import com.naruto.model.NinjaDeTaijutsu;
 import com.naruto.model.Personagem;
@@ -29,6 +30,11 @@ public interface PersonagemMapper {
                 copyCommonFields(dto, ninja);
                 yield ninja;
             }
+            case "NINJA_DE_GENJUTSU" -> {
+                NinjaDeGenjutsu ninja = new NinjaDeGenjutsu();
+                copyCommonFields(dto, ninja);
+                yield ninja;
+            }
             default -> throw new IllegalArgumentException("Tipo inválido: " + dto.categoriaNinja());
         };
     }
@@ -42,6 +48,7 @@ public interface PersonagemMapper {
     default String categoriaNinja(Personagem personagem) {
         if (personagem instanceof NinjaDeNinjutsu) return "NINJA_DE_NINJUTSU";
         if (personagem instanceof NinjaDeTaijutsu) return "NINJA_DE_TAIJUTSU";
+        if (personagem instanceof NinjaDeGenjutsu) return "NINJA_DE_GENJUTSU";
         return "DESCONHECIDO";
     }
 }

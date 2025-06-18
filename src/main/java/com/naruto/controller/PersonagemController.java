@@ -4,6 +4,7 @@ import com.naruto.dto.jutsu.JutsuRequestDto;
 import com.naruto.dto.personagem.NovoPersonagemDTO;
 import com.naruto.dto.personagem.PersonagemResponseDto;
 import com.naruto.service.PersonagemService;
+import jakarta.validation.Valid;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,7 @@ public class PersonagemController {
     private final PersonagemService service;
 
     @PostMapping
-    public ResponseEntity<PersonagemResponseDto> cadastrar(@RequestBody NovoPersonagemDTO novoPersonagem) {
+    public ResponseEntity<PersonagemResponseDto> cadastrar(@Valid @RequestBody NovoPersonagemDTO novoPersonagem) {
         PersonagemResponseDto novoPersonagemCriado = service.novoPersonagem(novoPersonagem);
         return ResponseEntity.status(HttpStatus.CREATED).body(novoPersonagemCriado);
     }
@@ -38,7 +39,7 @@ public class PersonagemController {
     }
 
     @PatchMapping("/{id}/adicionar_jutsu")
-    public ResponseEntity<PersonagemResponseDto> adicionarJutsu(@PathVariable Long id, @RequestBody JutsuRequestDto dto) {
+    public ResponseEntity<PersonagemResponseDto> adicionarJutsu(@PathVariable Long id, @Valid @RequestBody JutsuRequestDto dto) {
         PersonagemResponseDto novoPersonagemCriado = service.adicionarJutsu(id,dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(novoPersonagemCriado);
     }

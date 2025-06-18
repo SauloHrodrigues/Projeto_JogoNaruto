@@ -20,7 +20,7 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class PersonagemServiceImp implements PersonagemService, IPersonagem {
+public class PersonagemServiceImp implements PersonagemService {
 
     private final PersonagemMapper personagemMapper;
     private final JutsuMapper jutsuMapper;
@@ -85,27 +85,26 @@ public class PersonagemServiceImp implements PersonagemService, IPersonagem {
                 dto.consumoDeChakra()
         );
     }
-    @Override
+
     public void salvar(Personagem personagem){
         repository.save(personagem);
     }
 
-    @Override
+
     public Jutsu buscarJutsu(Long id){
         return jutsuRepository.findById(id).orElseThrow(()->new RuntimeException(
                 "O jutsu com ID \' " + id +"\' não foi encontrado."));
     }
 
-    @Override
+
     public Personagem buscar(Long id){
         return repository.findById(id).orElseThrow(()->new PersonagemNaoEncontradoException(
                 "O personagem com id: \'" + id +"\' não foi encontrado."));
     }
 
-    @Override
+
     public Personagem buscar(String nome){
         return repository.findByNome(nome).orElseThrow(()-> new JogadorForaDoJogoException(
                 "O personagem com o nome \' " + nome+"\'  foi encontrado."));
     }
-
 }
