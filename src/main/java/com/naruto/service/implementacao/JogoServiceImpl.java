@@ -135,7 +135,7 @@ public class JogoServiceImpl implements JogoService {
     private void validaJutso(Long idJutsu){
         Jutsu jutsu = iPersonagem.buscarJutsu(idJutsu);
 
-        if (ninjaAtacante.getJutsus().contains(jutsu)){
+        if (ninjaAtacante.getJutsus().containsValue(jutsu)){
             jutsuDeAtaque = jutsu;
         } else{
             throw new JutsuNaoPertenceAoJogadoException("O jutsu de id: \'"+

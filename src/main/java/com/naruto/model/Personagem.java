@@ -3,6 +3,7 @@ package com.naruto.model;
 import com.naruto.enuns.CategoriaNinja;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.DiscriminatorColumn;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -10,10 +11,13 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Inheritance;
 import jakarta.persistence.InheritanceType;
+import jakarta.persistence.MapKeyColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -36,17 +40,26 @@ public abstract class Personagem {
     private Long id;
     private String nome;
 
+//    @Setter(value = AccessLevel.PRIVATE)
+//    @OneToMany(mappedBy = "personagem", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
+//    private List<Jutsu> jutsus = new ArrayList<>();
+
     @Setter(value = AccessLevel.PRIVATE)
     @OneToMany(mappedBy = "personagem", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-    private List<Jutsu> jutsus = new ArrayList<>();
+    @MapKeyColumn(name = "nome")
+    private Map<String,Jutsu> jutsus = new HashMap<>();
 
     @Setter(value = AccessLevel.PRIVATE)
     private int chakra;
     @Setter(value = AccessLevel.PRIVATE)
     private int vida;
 
+//    public void adicionarJutsu(Jutsu jutsu){
+//        jutsus.add(jutsu);
+//    }
     public void adicionarJutsu(Jutsu jutsu){
-        jutsus.add(jutsu);
+        jutsus.put(jutsu.getNome().toLowerCase(),jutsu);
+        jutsu.setPersonagem(this);
     }
 
     public void adicionarChakra(int chakra){

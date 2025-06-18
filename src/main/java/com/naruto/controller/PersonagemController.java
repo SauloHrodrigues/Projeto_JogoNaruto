@@ -38,7 +38,7 @@ public class PersonagemController {
         return ResponseEntity.status(HttpStatus.OK).body(lista);
     }
 
-    @PatchMapping("/{id}/adicionar_jutsu")
+    @PostMapping("/{id}/adicionar_jutsu")
     public ResponseEntity<PersonagemResponseDto> adicionarJutsu(@PathVariable Long id, @Valid @RequestBody JutsuRequestDto dto) {
         PersonagemResponseDto novoPersonagemCriado = service.adicionarJutsu(id,dto);
         return ResponseEntity.status(HttpStatus.CREATED).body(novoPersonagemCriado);

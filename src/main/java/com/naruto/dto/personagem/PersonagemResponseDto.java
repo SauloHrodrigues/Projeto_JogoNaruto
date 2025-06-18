@@ -11,6 +11,6 @@ public record PersonagemResponseDto(
         String categoriaNinja,
         int chakra,
         int vida,
-        List<JutsuResponseDto> jutsus
+        Map<String,JutsuResponseDto>jutsus
 ) {
 }

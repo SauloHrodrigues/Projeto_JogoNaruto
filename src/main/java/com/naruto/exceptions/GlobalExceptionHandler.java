@@ -6,6 +6,8 @@ import com.naruto.exceptions.Jogo.JogadorForaDoJogoException;
 import com.naruto.exceptions.Jogo.JogoInativoException;
 import com.naruto.exceptions.Jogo.JogoPendenteException;
 import com.naruto.exceptions.Jogo.JutsuNaoPertenceAoJogadoException;
+import com.naruto.exceptions.personagem.JutsuJaExistenteException;
+import com.naruto.exceptions.personagem.PersonagemJaCadastradoException;
 import com.naruto.exceptions.personagem.PersonagemNaoEncontradoException;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,6 +24,12 @@ public class GlobalExceptionHandler {
     public ResponseEntity<Object> handlerPersonagemNaoEncontradoException(PersonagemNaoEncontradoException ex){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("Erro. ", ex.getMessage()));
     }
+
+    @ExceptionHandler(PersonagemJaCadastradoException.class)
+    public ResponseEntity<Object> handlerPersonagemJaCadastradoException(PersonagemJaCadastradoException ex){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("Erro. ", ex.getMessage()));
+    }
+
     @ExceptionHandler(JogadorForaDoJogoException.class)
     public ResponseEntity<Object> handlerJogadorNaoCadastradoException(JogadorForaDoJogoException ex){
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("Erro. ", ex.getMessage()));
@@ -48,6 +56,10 @@ public class GlobalExceptionHandler {
 
 @ExceptionHandler(JogoPendenteException.class)
     public ResponseEntity<Object> handlerJogoPendenteException (JogoPendenteException  ex){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("Erro. ", ex.getMessage()));
+    }
+@ExceptionHandler(JutsuJaExistenteException.class)
+    public ResponseEntity<Object> handlerJutsuJaExistenteException  (JutsuJaExistenteException   ex){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("Erro. ", ex.getMessage()));
     }
 
