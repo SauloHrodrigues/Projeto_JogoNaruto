@@ -4,7 +4,7 @@ import com.naruto.dto.jogo.AtaqueRequestDto;
 import com.naruto.dto.jogo.AtaqueResponseDto;
 import com.naruto.dto.jogo.NovoJogoDto;
 
-public interface IJogoService {
+public interface JogoService {
 
     public void novoJogo(NovoJogoDto novosJogadores);
 

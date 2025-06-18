@@ -4,7 +4,7 @@ import com.naruto.dto.jogo.AtaqueRequestDto;
 import com.naruto.dto.jogo.AtaqueResponseDto;
 import com.naruto.dto.jogo.NovoJogoDto;
 import com.naruto.dto.personagem.PersonagemResponseDto;
-import com.naruto.service.IJogoService;
+import com.naruto.service.JogoService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(value = "/jogo")
 public class JogoContoller {
 
-    private final IJogoService service;
+    private final JogoService service;
 
     @PostMapping
     public ResponseEntity<PersonagemResponseDto> cadastrar(@RequestBody NovoJogoDto jogadores) {

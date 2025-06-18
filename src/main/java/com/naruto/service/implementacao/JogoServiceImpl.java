@@ -13,8 +13,7 @@ import com.naruto.model.Jogo;
 import com.naruto.model.Jutsu;
 import com.naruto.model.Personagem;
 import com.naruto.repository.JogoRepository;
-import com.naruto.service.IJogoService;
-import com.naruto.service.IPersonagem;
+import com.naruto.service.JogoService;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -23,10 +22,10 @@ import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
-public class IJogoServiceImpl implements IJogoService {
+public class JogoServiceImpl implements JogoService {
 
     private final JogoRepository repository;
-    private final IPersonagem iPersonagem;
+    private final PersonagemServiceImp iPersonagem;
     private final JogoMapper mapper;
     private final Map<Long,Personagem> jogadores = new HashMap<>();
     private Personagem ninjaAtacado;
@@ -49,6 +48,8 @@ public class IJogoServiceImpl implements IJogoService {
         repository.save(jogo);
         this.jogadores.put(jogo.getNinja01().getId(),jogo.getNinja01());
         this.jogadores.put(jogo.getNinja02().getId(),jogo.getNinja02());
+//        this.jogadores.put(ninja01.getId(), ninja01);
+//        this.jogadores.put(ninja02.getId(), ninja02);
         jogoAtivo= true;
     }
 
