@@ -12,12 +12,14 @@ import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import java.util.Objects;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Data
 @Entity
 @Table(name = "Jutsu")
+@Builder
 public class Jutsu {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
