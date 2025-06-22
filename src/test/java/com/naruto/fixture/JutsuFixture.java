@@ -2,7 +2,6 @@ package com.naruto.fixture;
 
 import com.naruto.dto.jutsu.JutsuRequestDto;
 import com.naruto.dto.jutsu.JutsuResponseDto;
-import com.naruto.model.Jutsu;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,11 +11,12 @@ public class JutsuFixture {
         return new JutsuRequestDto(nome,dano,consumoDeChkra);
     }
 
-    public static JutsuResponseDto response(Long id, String nome, int dano, int consumoDechakra){
-        return new JutsuResponseDto(id, nome, dano, consumoDechakra);
+
+    public static JutsuResponseDto response(Long id, JutsuRequestDto dto){
+        return new JutsuResponseDto(id, dto.nome(), dto.dano(), dto.consumoDeChakra());
     }
 
-    public static Map<String, JutsuResponseDto> mapJustsuDto(JutsuResponseDto dto){
+    public static Map<String, JutsuResponseDto> mapJustsuResponseDto(JutsuResponseDto dto){
         Map<String, JutsuResponseDto> jutsusMap = new HashMap<>();
         jutsusMap.put(dto.nome(),dto);
         return jutsusMap;

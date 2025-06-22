@@ -4,6 +4,7 @@ import com.naruto.dto.jutsu.JutsuRequestDto;
 import com.naruto.dto.jutsu.JutsuResponseDto;
 import com.naruto.dto.personagem.NovoPersonagemDTO;
 import com.naruto.dto.personagem.PersonagemResponseDto;
+import java.util.HashMap;
 import java.util.Map;
 
 public class PersonagemFixture {
@@ -27,9 +28,10 @@ public class PersonagemFixture {
         );
     }
 
-    public static PersonagemResponseDto responseDto(NovoPersonagemDTO dto, Map<String, JutsuResponseDto> jutsusMap ){
+    public static PersonagemResponseDto responseDto(Long id, NovoPersonagemDTO dto, JutsuResponseDto jutsusResponse ){
+        Map<String, JutsuResponseDto> jutsusMap = JutsuFixture.mapJustsuResponseDto(jutsusResponse);
         return new PersonagemResponseDto(
-                1L,
+                id,
                 dto.nome(),
                 dto.categoriaNinja(),
                 dto.chakra(),
