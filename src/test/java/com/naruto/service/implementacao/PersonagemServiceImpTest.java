@@ -9,14 +9,19 @@ import com.naruto.fixture.PersonagemFixture;
 import com.naruto.mappers.JutsuMapper;
 import com.naruto.mappers.PersonagemMapper;
 import com.naruto.model.Jutsu;
+import com.naruto.model.NinjaDeGenjutsu;
+import com.naruto.model.NinjaDeNinjutsu;
 import com.naruto.model.NinjaDeTaijutsu;
+import com.naruto.model.Personagem;
 import com.naruto.repository.JutsuRepository;
 import com.naruto.repository.PersonagemRepository;
+import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -58,6 +63,12 @@ class PersonagemServiceImpTest {
     JutsuResponseDto chidoriResponseDto;
     JutsuResponseDto punhoSuaveResponseDto;
 
+    NinjaDeTaijutsu ninjaDeTaijutsuEntity;
+    NinjaDeNinjutsu ninjaDeNinjutsuEntity;
+
+    NinjaDeGenjutsu ninjaDeGenjutsuEntity;
+    Jutsu jutsuEntity;
+
 
     @BeforeEach
     void setUp() {
@@ -69,28 +80,30 @@ class PersonagemServiceImpTest {
         chidoriResponseDto = JutsuFixture.response(2L,chidoriRequestDto);
         punhoSuaveResponseDto = JutsuFixture.response(3L, punhoSuaveRequestDto);
 
-        narutoRequestDTO = PersonagemFixture.novoDto("Naruto Uzumaki", "NINJA_DE_NINJUTSU", raseganRequestDto);
-        sasukeRequestDTO = PersonagemFixture.novoDto("Sasuke Uchiha", "NINJA_DE_TAIJUTSU", chidoriRequestDto);
-        kakashiRequestDTO = PersonagemFixture.novoDto("Kakashi Hatake", "NINJA_DE_GENJUTSU", punhoSuaveRequestDto);
+        narutoRequestDTO = PersonagemFixture.novoDto("Naruto Uzumaki", "NINJA_DE_NINJUTSU",5,10, raseganRequestDto);
+        sasukeRequestDTO = PersonagemFixture.novoDto("Sasuke Uchiha", "NINJA_DE_TAIJUTSU", 5,10, chidoriRequestDto);
+        kakashiRequestDTO = PersonagemFixture.novoDto("Kakashi Hatake", "NINJA_DE_GENJUTSU",5,10, punhoSuaveRequestDto);
 
         narutoResponseDTO = PersonagemFixture.responseDto(1L,narutoRequestDTO,raseganResponseDto);
         sasukeResponseDTO = PersonagemFixture.responseDto(2L,sasukeRequestDTO,chidoriResponseDto);
         kakashiResponseDTO = PersonagemFixture.responseDto(3L, kakashiRequestDTO, punhoSuaveResponseDto);
 
+        ninjaDeTaijutsuEntity = mock(NinjaDeTaijutsu.class);
+        ninjaDeGenjutsuEntity = mock(NinjaDeGenjutsu.class);
+        ninjaDeNinjutsuEntity = mock(NinjaDeNinjutsu.class);
+
+        jutsuEntity = mock(Jutsu.class);
 
     }
 
     @Test
     void novoPersonagem() {
 
-        NinjaDeTaijutsu personagemEntity = mock(NinjaDeTaijutsu.class);
-        Jutsu jutsuEntity = mock(Jutsu.class);
-
         // Simulações
-        when(personagemMapper.toEntity(any())).thenReturn(personagemEntity);
+        when(personagemMapper.toEntity(any())).thenReturn(ninjaDeTaijutsuEntity);
         when(jutsuMapper.toEntity(narutoRequestDTO.jutsuRequestDto())).thenReturn(jutsuEntity);
-        when(repository.save(personagemEntity)).thenReturn(personagemEntity);
-        when(personagemMapper.toResponseDto(personagemEntity)).thenReturn(narutoResponseDTO);
+        when(repository.save(ninjaDeTaijutsuEntity)).thenReturn(ninjaDeTaijutsuEntity);
+        when(personagemMapper.toResponseDto(ninjaDeTaijutsuEntity)).thenReturn(narutoResponseDTO);
 
         // Act
         PersonagemResponseDto result = service.novoPersonagem(narutoRequestDTO);
@@ -102,14 +115,33 @@ class PersonagemServiceImpTest {
         assertNotNull(result.jutsus());
 
         verify(jutsuRepository).save(jutsuEntity);
-        verify(repository).save(personagemEntity);
+        verify(repository).save(ninjaDeTaijutsuEntity);
         verify(personagemMapper).toEntity(any());
         verify(jutsuMapper).toEntity(narutoRequestDTO.jutsuRequestDto());
-        verify(personagemMapper).toResponseDto(personagemEntity);
+        verify(personagemMapper).toResponseDto(ninjaDeTaijutsuEntity);
     }
+
 
     @Test
     void listarPersonagens() {
+        // Arrange
+
+        List<Personagem> personagens = List.of(ninjaDeNinjutsuEntity, ninjaDeTaijutsuEntity, ninjaDeGenjutsuEntity);
+        List<PersonagemResponseDto> dtos = List.of(narutoResponseDTO, sasukeResponseDTO,kakashiResponseDTO);
+        Mockito.when(repository.findAll()).thenReturn(personagens);
+        Mockito.when(personagemMapper.toResponseDto(personagens)).thenReturn(dtos);
+
+        // Act
+        List<PersonagemResponseDto> resultado = service.listarPersonagens();
+
+        // Assert
+        assertEquals(3, resultado.size());
+        assertEquals("Naruto Uzumaki", resultado.get(0).nome());
+        assertEquals("Sasuke Uchiha", resultado.get(1).nome());
+        assertEquals("Kakashi Hatake", resultado.get(2).nome());
+
+        Mockito.verify(repository).findAll();
+        Mockito.verify(personagemMapper).toResponseDto(personagens);
     }
 
     @Test

@@ -4,26 +4,21 @@ import com.naruto.dto.jutsu.JutsuRequestDto;
 import com.naruto.dto.jutsu.JutsuResponseDto;
 import com.naruto.dto.personagem.NovoPersonagemDTO;
 import com.naruto.dto.personagem.PersonagemResponseDto;
+import com.naruto.model.Jutsu;
+import com.naruto.model.NinjaDeNinjutsu;
+import com.naruto.model.Personagem;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class PersonagemFixture {
 
     public static NovoPersonagemDTO novoDto(String nome, String categoria,int chakra, int vida,  JutsuRequestDto jutsuDto) {
         return new NovoPersonagemDTO(
-                "Naruto",
+                nome,
                 categoria,
                 chakra,
                 vida,
-                jutsuDto
-        );
-    }
-    public static NovoPersonagemDTO novoDto(String nome, String categoria, JutsuRequestDto jutsuDto) {
-        return new NovoPersonagemDTO(
-                "Naruto",
-                categoria,
-                100,
-                100,
                 jutsuDto
         );
     }
