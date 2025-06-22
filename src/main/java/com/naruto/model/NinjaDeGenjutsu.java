@@ -3,7 +3,9 @@ package com.naruto.model;
 import com.naruto.enuns.CategoriaNinja;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
+import lombok.NoArgsConstructor;
 
+@NoArgsConstructor
 @Entity
 @DiscriminatorValue("NINJA_DE_GENJUTSU")
 public class NinjaDeGenjutsu extends Personagem {
