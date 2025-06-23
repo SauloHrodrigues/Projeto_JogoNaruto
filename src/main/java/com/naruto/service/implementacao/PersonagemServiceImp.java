@@ -5,6 +5,7 @@ import com.naruto.dto.personagem.NovoPersonagemDTO;
 import com.naruto.dto.personagem.PersonagemResponseDto;
 import com.naruto.exceptions.Jogo.JogadorForaDoJogoException;
 import com.naruto.exceptions.personagem.JutsuJaExistenteException;
+import com.naruto.exceptions.personagem.JutsuNaoEncontradoException;
 import com.naruto.exceptions.personagem.PersonagemJaCadastradoException;
 import com.naruto.exceptions.personagem.PersonagemNaoEncontradoException;
 import com.naruto.mappers.JutsuMapper;
@@ -47,7 +48,7 @@ public class PersonagemServiceImp implements PersonagemService {
     @Transactional
     public PersonagemResponseDto adicionarJutsu(Long idPersonagem, JutsuRequestDto jutsuDto){
         Personagem personagem = buscar(idPersonagem);
-        validarJutsu(personagem,jutsuDto.nome());
+        validaPersonagemSemOJutsu(personagem,jutsuDto.nome());
         Jutsu jutsu = jutsuMapper.toEntity(jutsuDto);
         jutsuRepository.save(jutsu);
         personagem.adicionarJutsu(jutsu);
@@ -60,7 +61,7 @@ public class PersonagemServiceImp implements PersonagemService {
         repository.delete(personagem);
     }
 
-    public void validarJutsu(Personagem personagem, String nomeDojutsu){
+    public void validaPersonagemSemOJutsu(Personagem personagem, String nomeDojutsu){
         String chaveJutsu = nomeDojutsu.toLowerCase();
         if(personagem.getJutsus().containsKey(chaveJutsu)){
             throw new JutsuJaExistenteException(
@@ -84,7 +85,7 @@ public class PersonagemServiceImp implements PersonagemService {
 
 
     public Jutsu buscarJutsu(Long id){
-        return jutsuRepository.findById(id).orElseThrow(()->new RuntimeException(
+        return jutsuRepository.findById(id).orElseThrow(()->new JutsuNaoEncontradoException(
                 "O jutsu com ID \' " + id +"\' não foi encontrado."));
     }
 
