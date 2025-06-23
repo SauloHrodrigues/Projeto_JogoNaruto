@@ -5,7 +5,9 @@ import com.naruto.dto.jutsu.JutsuResponseDto;
 import com.naruto.dto.personagem.NovoPersonagemDTO;
 import com.naruto.dto.personagem.PersonagemResponseDto;
 import com.naruto.model.Jutsu;
+import com.naruto.model.NinjaDeGenjutsu;
 import com.naruto.model.NinjaDeNinjutsu;
+import com.naruto.model.NinjaDeTaijutsu;
 import com.naruto.model.Personagem;
 import java.util.HashMap;
 import java.util.List;
@@ -33,5 +35,22 @@ public class PersonagemFixture {
                 dto.vida(),
                 jutsusMap
         );
+    }
+
+    public static NinjaDeNinjutsu ninjaDeNinjutsuEntity(String nome){
+        NinjaDeNinjutsu ninjutsu = new NinjaDeNinjutsu();
+        ninjutsu.setNome(nome);
+        return ninjutsu;
+    }
+    public static NinjaDeGenjutsu ninjaDeGenjutsuEntity(String nome){
+        NinjaDeGenjutsu genjutsu = new NinjaDeGenjutsu();
+        genjutsu.setNome(nome);
+        return genjutsu;
+    }
+
+    public static NinjaDeTaijutsu ninjaDeTaijutsuEntity(String nome){
+        NinjaDeTaijutsu taijutsu = new NinjaDeTaijutsu();
+        taijutsu.setNome(nome);
+        return taijutsu;
     }
 }

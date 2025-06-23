@@ -95,10 +95,9 @@ public class PersonagemServiceImp implements PersonagemService {
                 "O personagem com id: \'" + id +"\' não foi encontrado."));
     }
 
-
     public Personagem buscar(String nome){
-        return repository.findByNome(nome).orElseThrow(()-> new JogadorForaDoJogoException(
-                "O personagem com o nome \' " + nome+"\' não foi encontrado."));
+        return repository.findByNome(nome).orElseThrow(()-> new PersonagemNaoEncontradoException(
+                "O personagem com o nome \'" + nome+"\' não foi encontrado."));
     }
 
 
