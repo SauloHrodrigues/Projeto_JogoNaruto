@@ -53,7 +53,7 @@ public class JogoServiceImpl implements JogoService {
         String mensagem =  ninjaAtacante.usarJutsu(jutsuDeAtaque, ninjaAtacado.getNome());
         defesaPendente = true;
         iPersonagem.salvar(jogadores.get(ninjaAtacante.getId()));
-        return null;//mapper.toResponse(mensagem, jutsuDeAtaque.getDano(), ninjaAtacado.getId());
+        return new AtaqueResponseDto(mensagem, jutsuDeAtaque.getDano(), ninjaAtacado.getId());
     }
 
     @Override
