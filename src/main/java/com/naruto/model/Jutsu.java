@@ -19,6 +19,8 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @Table(name = "Jutsu")
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
 public class Jutsu {
     @Id
