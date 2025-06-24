@@ -21,7 +21,7 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class JogoServiceImpl implements JogoService {
 
-    private final PersonagemServiceImp iPersonagem;
+    private final PersonagemServiceImp personagemServiceImp;
     private final Map<Long,Personagem> jogadores = new HashMap<>();
     private Personagem ninjaAtacado;
     private Personagem ninjaAtacante;
@@ -36,8 +36,8 @@ public class JogoServiceImpl implements JogoService {
             throw new JogoPendenteException("Há um jogo em andamento. Finalize para iniciar novo jogo.");
         }
 
-        Personagem ninja01 = iPersonagem.buscar(jogadores.nomeDoCombatente01().toLowerCase());
-        Personagem ninja02 = iPersonagem.buscar(jogadores.nomeDoCombatente02().toLowerCase());
+        Personagem ninja01 = personagemServiceImp.buscar(jogadores.nomeDoCombatente01().toLowerCase());
+        Personagem ninja02 = personagemServiceImp.buscar(jogadores.nomeDoCombatente02().toLowerCase());
         this.jogadores.put(ninja01.getId(),ninja01);
         this.jogadores.put(ninja02.getId(),ninja02);
         jogoAtivo= true;
@@ -52,8 +52,19 @@ public class JogoServiceImpl implements JogoService {
         validarDescontarChakra(ninjaAtacante);
         String mensagem =  ninjaAtacante.usarJutsu(jutsuDeAtaque, ninjaAtacado.getNome());
         defesaPendente = true;
-        iPersonagem.salvar(jogadores.get(ninjaAtacante.getId()));
+        personagemServiceImp.salvar(jogadores.get(ninjaAtacante.getId()));
         return new AtaqueResponseDto(mensagem, jutsuDeAtaque.getDano(), ninjaAtacado.getId());
+    }
+
+    private void posicionarJogador(Long idDoAtacante){
+        validaJogador(idDoAtacante);
+        for (Long id : jogadores.keySet()) {
+            if(id == idDoAtacante){
+                ninjaAtacante = jogadores.get(id);
+            } else {
+                ninjaAtacado = jogadores.get(id);
+            }
+        }
     }
 
     @Override
@@ -69,7 +80,7 @@ public class JogoServiceImpl implements JogoService {
                     " se defender do ataque lhe inferido.";
         } else {
             ninjaAtacado.diminuirVidas(jutsuDeAtaque.getDano());
-            iPersonagem.salvar(jogadores.get(ninjaAtacado.getId()));
+            personagemServiceImp.salvar(jogadores.get(ninjaAtacado.getId()));
             resposta = ninjaAtacado.desviar()+"não conseguiu exito ao" +
                     " se defender do ataque lhe inferido, e perdeu "+ jutsuDeAtaque.getDano()
                     +" vidas!";
@@ -89,16 +100,7 @@ public class JogoServiceImpl implements JogoService {
     }
 
 
-    private void posicionarJogador(Long idDoAtacante){
-        validaJogador(idDoAtacante);
-        for (Long id : jogadores.keySet()) {
-            if(id == idDoAtacante){
-                ninjaAtacante = jogadores.get(id);
-            } else {
-                ninjaAtacado = jogadores.get(id);
-            }
-        }
-    }
+
 
 
     private void validaDefesaPendente(){
@@ -123,7 +125,7 @@ public class JogoServiceImpl implements JogoService {
     }
 
     private void validaJutso(Long idJutsu){
-        Jutsu jutsu = iPersonagem.buscarJutsu(idJutsu);
+        Jutsu jutsu = personagemServiceImp.buscarJutsu(idJutsu);
 
         if (ninjaAtacante.getJutsus().containsValue(jutsu)){
             jutsuDeAtaque = jutsu;
