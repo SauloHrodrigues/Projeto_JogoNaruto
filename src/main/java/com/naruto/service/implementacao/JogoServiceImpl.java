@@ -8,11 +8,8 @@ import com.naruto.exceptions.Jogo.InsuficienciaDeChakrasException;
 import com.naruto.exceptions.Jogo.JogadorForaDoJogoException;
 import com.naruto.exceptions.Jogo.JogoPendenteException;
 import com.naruto.exceptions.Jogo.JutsuNaoPertenceAoJogadoException;
-import com.naruto.mappers.JogoMapper;
-import com.naruto.model.Jogo;
 import com.naruto.model.Jutsu;
 import com.naruto.model.Personagem;
-import com.naruto.repository.JogoRepository;
 import com.naruto.service.JogoService;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,14 +21,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class JogoServiceImpl implements JogoService {
 
-    private final JogoRepository repository;
     private final PersonagemServiceImp iPersonagem;
-    private final JogoMapper mapper;
     private final Map<Long,Personagem> jogadores = new HashMap<>();
     private Personagem ninjaAtacado;
     private Personagem ninjaAtacante;
     private Jutsu jutsuDeAtaque;
-    private Jogo jogo;
     private boolean jogoAtivo;
     private boolean defesaPendente = false;
 
@@ -44,12 +38,8 @@ public class JogoServiceImpl implements JogoService {
 
         Personagem ninja01 = iPersonagem.buscar(jogadores.nomeDoCombatente01().toLowerCase());
         Personagem ninja02 = iPersonagem.buscar(jogadores.nomeDoCombatente02().toLowerCase());
-        jogo = mapper.toEntity(ninja01,ninja02);
-        repository.save(jogo);
-        this.jogadores.put(jogo.getNinja01().getId(),jogo.getNinja01());
-        this.jogadores.put(jogo.getNinja02().getId(),jogo.getNinja02());
-//        this.jogadores.put(ninja01.getId(), ninja01);
-//        this.jogadores.put(ninja02.getId(), ninja02);
+        this.jogadores.put(ninja01.getId(),ninja01);
+        this.jogadores.put(ninja02.getId(),ninja02);
         jogoAtivo= true;
     }
 
@@ -63,7 +53,7 @@ public class JogoServiceImpl implements JogoService {
         String mensagem =  ninjaAtacante.usarJutsu(jutsuDeAtaque, ninjaAtacado.getNome());
         defesaPendente = true;
         iPersonagem.salvar(jogadores.get(ninjaAtacante.getId()));
-        return mapper.toResponse(mensagem, jutsuDeAtaque.getDano(), ninjaAtacado.getId());
+        return null;//mapper.toResponse(mensagem, jutsuDeAtaque.getDano(), ninjaAtacado.getId());
     }
 
     @Override
