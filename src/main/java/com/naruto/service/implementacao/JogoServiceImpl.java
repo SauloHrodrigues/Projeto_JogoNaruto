@@ -56,17 +56,6 @@ public class JogoServiceImpl implements JogoService {
         return new AtaqueResponseDto(mensagem, jutsuDeAtaque.getDano(), ninjaAtacado.getId());
     }
 
-    private void posicionarJogador(Long idDoAtacante){
-        validaJogador(idDoAtacante);
-        for (Long id : jogadores.keySet()) {
-            if(id == idDoAtacante){
-                ninjaAtacante = jogadores.get(id);
-            } else {
-                ninjaAtacado = jogadores.get(id);
-            }
-        }
-    }
-
     @Override
     public String desviar(Long id) {
         validaJogo();
@@ -89,6 +78,17 @@ public class JogoServiceImpl implements JogoService {
         return  resposta;
     }
 
+    private void posicionarJogador(Long idDoAtacante){
+        validaJogador(idDoAtacante);
+        for (Long id : jogadores.keySet()) {
+            if(id == idDoAtacante){
+                ninjaAtacante = jogadores.get(id);
+            } else {
+                ninjaAtacado = jogadores.get(id);
+            }
+        }
+    }
+
 
     private void validarDescontarChakra(Personagem personagem){
         if(personagem.getChakra() >= jutsuDeAtaque.getConsumoDeChakra()){
@@ -98,9 +98,6 @@ public class JogoServiceImpl implements JogoService {
                     " possui Chakra suficiente para realizar a jogada.");
         }
     }
-
-
-
 
 
     private void validaDefesaPendente(){
@@ -115,7 +112,6 @@ public class JogoServiceImpl implements JogoService {
                     ", você acabou de atacar, aguarde sua vez para jogar!");
         }
     }
-
 
     private void validaJogador(Long id){
         if(!jogadores.containsKey(id)){
@@ -148,7 +144,7 @@ public class JogoServiceImpl implements JogoService {
         }
     }
 
-    private boolean respostaRandimica(){
+    protected boolean respostaRandimica(){
         Random random = new Random();
         return random.nextBoolean();
     }

@@ -4,13 +4,9 @@ import com.naruto.dto.jutsu.JutsuRequestDto;
 import com.naruto.dto.jutsu.JutsuResponseDto;
 import com.naruto.dto.personagem.NovoPersonagemDTO;
 import com.naruto.dto.personagem.PersonagemResponseDto;
-import com.naruto.model.Jutsu;
 import com.naruto.model.NinjaDeGenjutsu;
 import com.naruto.model.NinjaDeNinjutsu;
 import com.naruto.model.NinjaDeTaijutsu;
-import com.naruto.model.Personagem;
-import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class PersonagemFixture {
@@ -37,19 +33,23 @@ public class PersonagemFixture {
         );
     }
 
-    public static NinjaDeNinjutsu ninjaDeNinjutsuEntity(String nome){
+    public static NinjaDeNinjutsu ninjaDeNinjutsuEntity(Long id, String nome){
         NinjaDeNinjutsu ninjutsu = new NinjaDeNinjutsu();
+        ninjutsu.setId(id);
         ninjutsu.setNome(nome);
+        ninjutsu.adicionarChakra(50);
         return ninjutsu;
     }
-    public static NinjaDeGenjutsu ninjaDeGenjutsuEntity(String nome){
+    public static NinjaDeGenjutsu ninjaDeGenjutsuEntity(Long id,String nome){
         NinjaDeGenjutsu genjutsu = new NinjaDeGenjutsu();
+        genjutsu.setId(id);
         genjutsu.setNome(nome);
         return genjutsu;
     }
 
-    public static NinjaDeTaijutsu ninjaDeTaijutsuEntity(String nome){
+    public static NinjaDeTaijutsu ninjaDeTaijutsuEntity(Long id, String nome){
         NinjaDeTaijutsu taijutsu = new NinjaDeTaijutsu();
+        taijutsu.setId(id);
         taijutsu.setNome(nome);
         return taijutsu;
     }

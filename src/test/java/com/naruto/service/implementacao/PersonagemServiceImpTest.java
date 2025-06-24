@@ -190,7 +190,7 @@ class PersonagemServiceImpTest {
 
         JutsuJaExistenteException excecao = assertThrows(JutsuJaExistenteException.class,
                 () -> service.adicionarJutsu(idPersonagem, jutsuDto));
-        System.out.println(excecao.getMessage());
+
         assertTrue(excecao.getMessage().equals("O personagem Naruto Uzumaki, já possue o Jutsu: RASENGAN"));
         assertTrue(excecao.getMessage().contains(jutsuDto.nome().toUpperCase()));
 
@@ -224,7 +224,7 @@ class PersonagemServiceImpTest {
     @Test
     void lancaExcecaoPersonagemJáPossueDeterminadoJutsu(){
         // Arrange
-        Personagem personagemNaruto = PersonagemFixture.ninjaDeNinjutsuEntity("Naruto");
+        Personagem personagemNaruto = PersonagemFixture.ninjaDeNinjutsuEntity(1L,"Naruto");
         Jutsu jutsu = JutsuFixture.entity(raseganRequestDto);
         personagemNaruto.adicionarJutsu(jutsu);
 
@@ -237,7 +237,7 @@ class PersonagemServiceImpTest {
     @Test
     void deveValidarNovoPersonagem() {
 
-        Personagem personagemNaruto = PersonagemFixture.ninjaDeNinjutsuEntity("Naruto");
+        Personagem personagemNaruto = PersonagemFixture.ninjaDeNinjutsuEntity(1L,"Naruto");
         when(repository.findByNome(personagemNaruto.getNome().toLowerCase()))
                 .thenReturn(Optional.of(personagemNaruto));
 
@@ -315,7 +315,7 @@ class PersonagemServiceImpTest {
     @Test
     void aoBuscarPersonagemPorNomeDeveRetornarUmPersonagemExistente() {
         String nomeBuscado = "Naruto";
-        Personagem personagem = PersonagemFixture.ninjaDeNinjutsuEntity(nomeBuscado);
+        Personagem personagem = PersonagemFixture.ninjaDeNinjutsuEntity(1L,nomeBuscado);
 
         when(repository.findByNome(nomeBuscado)).thenReturn(Optional.of(personagem));
 
