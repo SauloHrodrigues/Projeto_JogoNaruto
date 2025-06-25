@@ -1,15 +1,12 @@
 package com.naruto.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
 import java.util.Objects;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -18,7 +15,7 @@ import lombok.NoArgsConstructor;
 
 @Data
 @Entity
-@Table(name = "Jutsu")
+@Table(name = "jutsu")
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
@@ -33,7 +30,6 @@ public class Jutsu {
     @ManyToOne
     @JoinColumn(name = "personagem_id")
     private Personagem personagem;
-
 
     @Override
     public String toString() {

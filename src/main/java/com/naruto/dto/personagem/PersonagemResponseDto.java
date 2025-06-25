@@ -1,16 +1,16 @@
 package com.naruto.dto.personagem;
 
 import com.naruto.dto.jutsu.JutsuResponseDto;
-import com.naruto.model.Jutsu;
-import java.util.List;
 import java.util.Map;
 
 public record PersonagemResponseDto(
         Long id,
         String nome,
         String categoriaNinja,
+        int idade,
+
         int chakra,
         int vida,
-        Map<String,JutsuResponseDto>jutsus
+        Map<String, JutsuResponseDto> jutsus
 ) {
 }

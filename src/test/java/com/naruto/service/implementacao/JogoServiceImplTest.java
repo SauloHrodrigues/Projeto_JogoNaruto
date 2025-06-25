@@ -2,19 +2,26 @@ package com.naruto.service.implementacao;
 
 import com.naruto.dto.jogo.AtaqueRequestDto;
 import com.naruto.dto.jogo.AtaqueResponseDto;
-import com.naruto.dto.jogo.NovoJogoDto;
+import com.naruto.dto.jogo.NovoJogoRequestDto;
+import com.naruto.dto.jogo.NovoJogoResponseDto;
+import com.naruto.dto.personagem.PersonagemResponseDto;
+import com.naruto.exceptions.Jogo.InaptoParaDefesaException;
 import com.naruto.exceptions.Jogo.JogoPendenteException;
 import com.naruto.fixture.JogoFixture;
 import com.naruto.fixture.JutsuFixture;
 import com.naruto.fixture.PersonagemFixture;
+import com.naruto.mappers.PersonagemMapper;
 import com.naruto.model.Jutsu;
+import com.naruto.model.NinjaDeGenjutsu;
 import com.naruto.model.NinjaDeNinjutsu;
 import com.naruto.model.NinjaDeTaijutsu;
 import com.naruto.model.Personagem;
 import java.util.HashMap;
 import java.util.Map;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
@@ -25,6 +32,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.spy;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
@@ -35,141 +43,163 @@ class JogoServiceImplTest {
     private JogoServiceImpl service;
 
     @Mock
-    PersonagemServiceImp personagemServiceImp;
+    private PersonagemServiceIpml personagemServiceIpml;
 
+    private Jutsu raseganJutsu;
+    private Jutsu hachimonJutsu;
+    private Jutsu punhoSuaveJutsu;
+    private NinjaDeNinjutsu naruto;
+    private NinjaDeTaijutsu sasuke;
+    private NinjaDeGenjutsu kakashi;
+
+
+    private PersonagemMapper personagemMapper;
+
+    @BeforeEach
+    void setUp() {
+       personagemMapper = Mappers.getMapper(PersonagemMapper.class);
+
+        raseganJutsu = JutsuFixture.entity(1L, "Rasengan", 20, 10);
+        hachimonJutsu = JutsuFixture.entity(2L, "Hachimon", 25, 8);
+        punhoSuaveJutsu = JutsuFixture.entity(3L, "Punho Suave", 5, 2);
+
+        naruto = PersonagemFixture.ninjaDeNinjutsuEntity(1L,"naruto uzumaki",5,10, 10,punhoSuaveJutsu);
+        sasuke = PersonagemFixture.ninjaDeTaijutsuEntity(2L, "sasuke uchiha",15,5, 10,raseganJutsu);
+        kakashi = PersonagemFixture.ninjaDeGenjutsuEntity(3L, "kakashi hatake", 5,10,10,hachimonJutsu);
+
+    }
 
     @Test
     void deveIniciarNovoJogoQuandoNaoHaJogoAtivo() {
+        NovoJogoRequestDto dto = JogoFixture.novoJogoDto("Naruto Uzumaki","Sasuke Uchiha");
+        String mensagem= "Batalha: " + dto.nomeDoCombatente01().toUpperCase() + " X " + dto.nomeDoCombatente02().toUpperCase() + " foi travada!!";
+        when(personagemServiceIpml.buscar(dto.nomeDoCombatente01().toLowerCase())).thenReturn(naruto);
+        when(personagemServiceIpml.buscar(dto.nomeDoCombatente02().toLowerCase())).thenReturn(sasuke);
 
-        NovoJogoDto novoJogoDto = JogoFixture.novoJogoDto("naruto","sasuke");
+        when(personagemServiceIpml.converterResponseDto(naruto)).thenReturn(personagemMapper.toResponseDto(naruto));
+        when(personagemServiceIpml.converterResponseDto(sasuke)).thenReturn(personagemMapper.toResponseDto(sasuke));
 
-        NinjaDeTaijutsu ninjaSasuke = PersonagemFixture.ninjaDeTaijutsuEntity(1L,novoJogoDto.nomeDoCombatente01());
-        NinjaDeNinjutsu ninjaNaruto = PersonagemFixture.ninjaDeNinjutsuEntity(3L,novoJogoDto.nomeDoCombatente02());
+       NovoJogoResponseDto resposta = service.novoJogo(dto);
 
-        when(personagemServiceImp.buscar("naruto")).thenReturn(ninjaNaruto);
-        when(personagemServiceImp.buscar("sasuke")).thenReturn(ninjaSasuke);
+        assertTrue(resposta.mensagem().equals(mensagem));
+        assertTrue(resposta.jogador01().id().equals(naruto.getId()));
+        assertTrue(resposta.jogador01().nome().equals(naruto.getNome()));
+        assertTrue(resposta.jogador01().jutsus().size() == naruto.getJutsus().size());
 
-        service.novoJogo(novoJogoDto);
-
-        verify(personagemServiceImp).buscar("naruto");
-        verify(personagemServiceImp).buscar("sasuke");
+        verify(personagemServiceIpml).buscar(dto.nomeDoCombatente01().toLowerCase());
+        verify(personagemServiceIpml).buscar(dto.nomeDoCombatente02().toLowerCase());
     }
 
     @Test
     void deveLancarExcecaoQuandoJogoEstiverAtivo() {
-        NovoJogoDto novoJogoDto = JogoFixture.novoJogoDto("naruto","sasuke");
 
-        NinjaDeTaijutsu ninjaSasuke = PersonagemFixture.ninjaDeTaijutsuEntity(1L,novoJogoDto.nomeDoCombatente01());
-        NinjaDeNinjutsu ninjaNaruto = PersonagemFixture.ninjaDeNinjutsuEntity(2L,novoJogoDto.nomeDoCombatente02());
+        NovoJogoRequestDto novoJogoRequestDto = new NovoJogoRequestDto("naruto","sasuke");
 
-        when(personagemServiceImp.buscar("naruto")).thenReturn(ninjaNaruto);
-        when(personagemServiceImp.buscar("sasuke")).thenReturn(ninjaSasuke);
+        ReflectionTestUtils.setField(service, "jogoAtivo", true);
 
-        service.novoJogo(novoJogoDto);
-
-        JogoPendenteException excessao = assertThrows(JogoPendenteException.class, () -> service.novoJogo(novoJogoDto));
+        JogoPendenteException excessao = assertThrows(JogoPendenteException.class,
+                () -> service.novoJogo(novoJogoRequestDto));
 
         assertTrue(excessao.getMessage().equals("Há um jogo em andamento. Finalize para iniciar novo jogo."));
     }
 
     @Test
     void deveAtacarDeJutsuComSucesso() {
-        Long idAtacante = 1L;
-        Long idAtacado = 2L;
-        Long idDoJutsu = 1L;
-
-        AtaqueRequestDto ataqueRequestDto = JogoFixture.ataqueDto(idAtacante,idDoJutsu);
-
-        NinjaDeNinjutsu atacante = PersonagemFixture.ninjaDeNinjutsuEntity(idAtacante,"naruto");
-        NinjaDeTaijutsu atacado = PersonagemFixture.ninjaDeTaijutsuEntity(idAtacado,"Sasuke");
-
-        Jutsu jutsu = JutsuFixture.entity(idDoJutsu, "Rasengan", 20, 10);
-        atacante.adicionarJutsu(jutsu);
-
+        AtaqueRequestDto ataqueRequestDto = JogoFixture.ataqueDto(kakashi.getId(), hachimonJutsu.getId());
         Map<Long, Personagem> jogadores = new HashMap<>();
-        jogadores.put(atacante.getId(), atacante);
-        jogadores.put(atacado.getId(), atacado);
+        jogadores.put(kakashi.getId(),kakashi);
+        jogadores.put(sasuke.getId(),sasuke);
+
+        when(personagemServiceIpml.buscarJutsu(hachimonJutsu.getId())).thenReturn(hachimonJutsu);
 
         ReflectionTestUtils.setField(service, "jogoAtivo", true);
         ReflectionTestUtils.setField(service, "jogadores", jogadores);
-        ReflectionTestUtils.setField(service, "ninjaAtacante", atacante);
-        ReflectionTestUtils.setField(service, "ninjaAtacado", atacado);
-        ReflectionTestUtils.setField(service, "jutsuDeAtaque", jutsu);
-
-        when(personagemServiceImp.buscarJutsu(idDoJutsu)).thenReturn(jutsu);
+        ReflectionTestUtils.setField(service, "ninjaAtacante", kakashi);
+        ReflectionTestUtils.setField(service, "ninjaAtacado", sasuke);
+        ReflectionTestUtils.setField(service, "jutsuDeAtaque", hachimonJutsu);
 
         AtaqueResponseDto response = service.atacarDeJutsu(ataqueRequestDto);
 
-        assertEquals("O ninja de NINJUTSU: naruto, infere o jutso: RASENGAN" +
-                " contra o inimigo: Sasuke para causar danos.", response.mensagem());
-        assertEquals(jutsu.getDano(), response.danoACausar());
-        assertEquals(idAtacado, response.idInimigo());
+        assertEquals(sasuke.getId(),response.idInimigo());
+        assertEquals(hachimonJutsu.getDano(),response.danoACausar());
+        assertTrue(response.mensagem().contains("O ninja de GENJUTSU:"));
+        assertEquals(hachimonJutsu.getDano(), response.danoACausar());
+        assertEquals(sasuke.getId(), response.idInimigo());
 
-        verify(personagemServiceImp).salvar(atacante);
+        verify(personagemServiceIpml).salvar(kakashi);
     }
-
 
     @Test
     void validarDesvioBemSucedido() {
-        Long idDeDefesa = 1L;
-        Long idAtacante = 2L;
-        Long idDoJutsu = 1L;
-
-        NinjaDeNinjutsu atacante = PersonagemFixture.ninjaDeNinjutsuEntity(idAtacante,"naruto");
-        NinjaDeTaijutsu atacado = PersonagemFixture.ninjaDeTaijutsuEntity(idDeDefesa,"Sasuke");
-
-        Jutsu jutsu = JutsuFixture.entity(idDoJutsu, "Rasengan", 20, 10);
-        atacante.adicionarJutsu(jutsu);
+        NinjaDeNinjutsu ninjaAtacante = naruto;
+        NinjaDeTaijutsu ninjaAtacado = sasuke;
 
         Map<Long, Personagem> jogadores = new HashMap<>();
-        jogadores.put(atacante.getId(), atacante);
-        jogadores.put(atacado.getId(), atacado);
+        jogadores.put(ninjaAtacante.getId(), ninjaAtacante);
+        jogadores.put(ninjaAtacado.getId(), ninjaAtacado);
 
-        ReflectionTestUtils.setField(service, "jogoAtivo", true);
-        ReflectionTestUtils.setField(service, "defesaPendente", true);
-        ReflectionTestUtils.setField(service, "jogadores", jogadores);
-        ReflectionTestUtils.setField(service, "ninjaAtacante", atacante);
-        ReflectionTestUtils.setField(service, "ninjaAtacado", atacado);
-        ReflectionTestUtils.setField(service, "jutsuDeAtaque", jutsu);
+        JogoServiceImpl spyService = spy(service);
 
-        JogoServiceImpl spyService = Mockito.spy(service);
+        ReflectionTestUtils.setField(spyService, "jogoAtivo", true);
+        ReflectionTestUtils.setField(spyService, "defesaPendente", true);
+        ReflectionTestUtils.setField(spyService, "jogadores", jogadores);
+        ReflectionTestUtils.setField(spyService, "ninjaAtacante", ninjaAtacante);
+        ReflectionTestUtils.setField(spyService, "ninjaAtacado", ninjaAtacado);
+        ReflectionTestUtils.setField(spyService, "jutsuDeAtaque", hachimonJutsu);
+
         doReturn(true).when(spyService).respostaRandimica();
 
-        String resposta = spyService.desviar(idDeDefesa);
+        String retorno = spyService.desviar(ninjaAtacado.getId());
 
-        assertEquals("O ninja de TAIJUTSU, usado seu poderes conseguiu exito ao " +
-                "se defender do ataque lhe inferido.", resposta);
+        assertEquals(ninjaAtacado.desviar()+" usando seu poderes conseguiu exito ao " +
+                "se defender do ataque lhe inferido.", retorno);
     }
 
     @Test
     void validarDesvioMalSucedido() {
-        Long idDeDefesa = 1L;
-        Long idAtacante = 2L;
-        Long idDoJutsu = 1L;
-
-        NinjaDeNinjutsu atacante = PersonagemFixture.ninjaDeNinjutsuEntity(idAtacante,"naruto");
-        NinjaDeTaijutsu atacado = PersonagemFixture.ninjaDeTaijutsuEntity(idDeDefesa,"Sasuke");
-
-        Jutsu jutsu = JutsuFixture.entity(idDoJutsu, "Rasengan", 20, 10);
-        atacante.adicionarJutsu(jutsu);
+        NinjaDeNinjutsu ninjaAtacado = naruto;
+        NinjaDeGenjutsu ninjaAtacante = kakashi;
 
         Map<Long, Personagem> jogadores = new HashMap<>();
-        jogadores.put(atacante.getId(), atacante);
-        jogadores.put(atacado.getId(), atacado);
-
-        ReflectionTestUtils.setField(service, "jogoAtivo", true);
-        ReflectionTestUtils.setField(service, "defesaPendente", true);
-        ReflectionTestUtils.setField(service, "jogadores", jogadores);
-        ReflectionTestUtils.setField(service, "ninjaAtacante", atacante);
-        ReflectionTestUtils.setField(service, "ninjaAtacado", atacado);
-        ReflectionTestUtils.setField(service, "jutsuDeAtaque", jutsu);
+        jogadores.put(ninjaAtacado.getId(),ninjaAtacado);
+        jogadores.put(ninjaAtacante.getId(),ninjaAtacante);
 
         JogoServiceImpl spyService = Mockito.spy(service);
+
+        ReflectionTestUtils.setField(spyService, "jogoAtivo", true);
+        ReflectionTestUtils.setField(spyService, "defesaPendente", true);
+        ReflectionTestUtils.setField(spyService, "jogadores", jogadores);
+        ReflectionTestUtils.setField(spyService, "ninjaAtacante", ninjaAtacante);
+        ReflectionTestUtils.setField(spyService, "ninjaAtacado", ninjaAtacado);
+        ReflectionTestUtils.setField(spyService, "jutsuDeAtaque", hachimonJutsu);
+
+
         doReturn(false).when(spyService).respostaRandimica();
 
-        String resposta = spyService.desviar(idDeDefesa);
+        String resposta = spyService.desviar(ninjaAtacado.getId());
 
-        assertEquals("O ninja de TAIJUTSU, não conseguiu exito ao se defender do" +
-                " ataque lhe inferido, e perdeu 20 vidas!", resposta);
+        assertEquals(ninjaAtacado.desviar()+"não conseguiu exito ao se defender do" +
+                " ataque lhe inferido, e perdeu "+ hachimonJutsu.getDano()+" vidas!", resposta);
+    }
+
+    @Test
+    void deveLancarExcecaoQuandoADefesaNãoEstiverPendente() {
+        NinjaDeNinjutsu ninjaAtacado = naruto;
+        NinjaDeGenjutsu ninjaAtacante = kakashi;
+
+        Map<Long, Personagem> jogadores = new HashMap<>();
+        jogadores.put(ninjaAtacado.getId(),ninjaAtacado);
+        jogadores.put(ninjaAtacante.getId(),ninjaAtacante);
+
+        JogoServiceImpl spyService = Mockito.spy(service);
+
+        ReflectionTestUtils.setField(spyService, "jogoAtivo", true);
+        ReflectionTestUtils.setField(spyService, "defesaPendente", false);
+        ReflectionTestUtils.setField(spyService, "jogadores", jogadores);
+
+        InaptoParaDefesaException excessao = assertThrows(InaptoParaDefesaException.class,
+                () -> spyService.desviar(naruto.getId()));
+
+        assertEquals("Não há defesa a ser feita",excessao.getMessage());
     }
 }

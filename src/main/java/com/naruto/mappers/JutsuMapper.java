@@ -10,5 +10,4 @@ public interface JutsuMapper {
 
     Jutsu toEntity(JutsuRequestDto dto);
 
-    JutsuResponseDto toResponse(Jutsu jutsu);
 }

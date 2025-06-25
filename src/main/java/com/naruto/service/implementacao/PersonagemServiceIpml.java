@@ -3,7 +3,6 @@ package com.naruto.service.implementacao;
 import com.naruto.dto.jutsu.JutsuRequestDto;
 import com.naruto.dto.personagem.NovoPersonagemDTO;
 import com.naruto.dto.personagem.PersonagemResponseDto;
-import com.naruto.exceptions.Jogo.JogadorForaDoJogoException;
 import com.naruto.exceptions.personagem.JutsuJaExistenteException;
 import com.naruto.exceptions.personagem.JutsuNaoEncontradoException;
 import com.naruto.exceptions.personagem.PersonagemJaCadastradoException;
@@ -15,6 +14,7 @@ import com.naruto.model.Personagem;
 import com.naruto.repository.JutsuRepository;
 import com.naruto.repository.PersonagemRepository;
 import com.naruto.service.PersonagemService;
+import com.naruto.service.PersonagemSeviceUsoInterno;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -23,13 +23,14 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class PersonagemServiceImp implements PersonagemService {
+public class PersonagemServiceIpml implements PersonagemService, PersonagemSeviceUsoInterno {
 
     private final PersonagemMapper personagemMapper;
     private final JutsuMapper jutsuMapper;
     private final PersonagemRepository repository;
     private final JutsuRepository jutsuRepository;
 
+    @Override
     public PersonagemResponseDto novoPersonagem(NovoPersonagemDTO dto) {
         validarNovoPersonagem(dto.nome());
         Personagem personagem = personagemMapper.toEntity(normalize(dto));
@@ -40,9 +41,38 @@ public class PersonagemServiceImp implements PersonagemService {
         return personagemMapper.toResponseDto(personagem);
     }
 
+    @Override
     public List<PersonagemResponseDto> listarPersonagens(){
         List<Personagem> personagems = repository.findAll();
-        return personagemMapper.toResponseDto(personagems);
+        return personagemMapper.toResponseDtoList(personagems);
+    }
+
+    @Override
+    public Personagem salvar(Personagem personagem){
+        return repository.save(personagem);
+    }
+
+    @Override
+    public Jutsu buscarJutsu(Long id){
+        return jutsuRepository.findById(id).orElseThrow(()->new JutsuNaoEncontradoException(
+                "O jutsu com ID \' " + id +"\' não foi encontrado."));
+    }
+
+    @Override
+    public Personagem buscar(Long id){
+        return repository.findById(id).orElseThrow(()->new PersonagemNaoEncontradoException(
+                "O personagem com id: \'" + id +"\' não foi encontrado."));
+    }
+
+    @Override
+    public Personagem buscar(String nome){
+        return repository.findByNome(nome).orElseThrow(()-> new PersonagemNaoEncontradoException(
+                "O personagem com o nome \'" + nome+"\' não foi encontrado."));
+    }
+
+    @Override
+    public PersonagemResponseDto converterResponseDto(Personagem personagem){
+        return personagemMapper.toResponseDto(personagem);
     }
 
     @Transactional
@@ -56,6 +86,7 @@ public class PersonagemServiceImp implements PersonagemService {
         return personagemMapper.toResponseDto(personagem);
     }
 
+    @Override
     public void apagar(Long id){
         Personagem personagem = buscar(id);
         repository.delete(personagem);
@@ -70,7 +101,7 @@ public class PersonagemServiceImp implements PersonagemService {
         }
     }
 
-    public void validarNovoPersonagem(String nome){
+    protected void validarNovoPersonagem(String nome){
         Optional<Personagem> personagem = repository.findByNome(nome.toLowerCase());
 
         if(personagem.isPresent()){
@@ -79,38 +110,17 @@ public class PersonagemServiceImp implements PersonagemService {
         }
     }
 
-    public void salvar(Personagem personagem){
-        repository.save(personagem);
-    }
 
-
-    public Jutsu buscarJutsu(Long id){
-        return jutsuRepository.findById(id).orElseThrow(()->new JutsuNaoEncontradoException(
-                "O jutsu com ID \' " + id +"\' não foi encontrado."));
-    }
-
-
-    public Personagem buscar(Long id){
-        return repository.findById(id).orElseThrow(()->new PersonagemNaoEncontradoException(
-                "O personagem com id: \'" + id +"\' não foi encontrado."));
-    }
-
-    public Personagem buscar(String nome){
-        return repository.findByNome(nome).orElseThrow(()-> new PersonagemNaoEncontradoException(
-                "O personagem com o nome \'" + nome+"\' não foi encontrado."));
-    }
-
-
-    protected NovoPersonagemDTO normalize(NovoPersonagemDTO dto){
+    private NovoPersonagemDTO normalize(NovoPersonagemDTO dto){
         return new NovoPersonagemDTO(
                 dto.nome().toLowerCase(),
-                dto.categoriaNinja(),
+                dto.categoriaNinja(), dto.idade(),
                 dto.chakra(), dto.vida(), dto.jutsuRequestDto()
         );
     }
 
 
-    protected JutsuRequestDto normalize(JutsuRequestDto dto){
+    private JutsuRequestDto normalize(JutsuRequestDto dto){
         return new JutsuRequestDto(
                 dto.nome().toLowerCase(),
                 dto.dano(),

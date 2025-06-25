@@ -2,13 +2,14 @@ package com.naruto.service;
 
 import com.naruto.dto.jogo.AtaqueRequestDto;
 import com.naruto.dto.jogo.AtaqueResponseDto;
-import com.naruto.dto.jogo.NovoJogoDto;
+import com.naruto.dto.jogo.NovoJogoRequestDto;
+import com.naruto.dto.jogo.NovoJogoResponseDto;
 
 public interface JogoService {
 
-    public void novoJogo(NovoJogoDto novosJogadores);
+    NovoJogoResponseDto novoJogo(NovoJogoRequestDto novosJogadores);
 
-    public AtaqueResponseDto atacarDeJutsu(AtaqueRequestDto dto);
+    AtaqueResponseDto atacarDeJutsu(AtaqueRequestDto dto);
 
-    public String desviar(Long id);
+    String desviar(Long id);
 }

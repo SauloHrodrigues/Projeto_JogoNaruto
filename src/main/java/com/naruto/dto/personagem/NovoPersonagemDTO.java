@@ -1,10 +1,7 @@
 package com.naruto.dto.personagem;
 
 import com.naruto.dto.jutsu.JutsuRequestDto;
-import com.naruto.enuns.CategoriaNinja;
-import com.naruto.model.Jutsu;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 
 public record NovoPersonagemDTO(
         @NotBlank(message = "O nome do personagem é campo de preenchimento obrigatório.")
@@ -14,7 +11,12 @@ public record NovoPersonagemDTO(
                 "\'NINJA_DE_GENJUTSU\'")
         String categoriaNinja,
 
+        int idade,
+
         int chakra,
+
         int vida,
+
         JutsuRequestDto jutsuRequestDto
-){}
+) {
+}

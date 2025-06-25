@@ -2,7 +2,8 @@ package com.naruto.controller;
 
 import com.naruto.dto.jogo.AtaqueRequestDto;
 import com.naruto.dto.jogo.AtaqueResponseDto;
-import com.naruto.dto.jogo.NovoJogoDto;
+import com.naruto.dto.jogo.NovoJogoRequestDto;
+import com.naruto.dto.jogo.NovoJogoResponseDto;
 import com.naruto.dto.personagem.PersonagemResponseDto;
 import com.naruto.service.JogoService;
 import jakarta.validation.Valid;
@@ -18,14 +19,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/jogo")
-public class JogoContoller {
+public class JogoController {
 
     private final JogoService service;
 
     @PostMapping
-    public ResponseEntity<PersonagemResponseDto> cadastrar(@Valid @RequestBody NovoJogoDto jogadores) {
-        service.novoJogo(jogadores);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+    public ResponseEntity<NovoJogoResponseDto> cadastrar(@Valid @RequestBody NovoJogoRequestDto jogadores) {
+        NovoJogoResponseDto resposta= service.novoJogo(jogadores);
+        return ResponseEntity.status(HttpStatus.CREATED).body(resposta);
     }
 
     @PostMapping("/atacar")

@@ -103,7 +103,8 @@ Para cadastrar um Ninja é necssário que o atributo (categoriaNinja), que é um
 
 Cadatrar um novo Jutsu
 
-PATCH/personagem{nome do Ninja}/novojutsu
+##### PATCH/personagem{nome do Ninja}/novojutsu
+
 Para cadastrar um novo jutsu, é necessário um personagem previamente cadastrado, pois ao criar o jutsu você o vincula ao personagem, que pode ter vários jutsus.
 
 Usar Jutsu

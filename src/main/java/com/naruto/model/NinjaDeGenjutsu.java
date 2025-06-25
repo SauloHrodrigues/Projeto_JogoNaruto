@@ -1,6 +1,5 @@
 package com.naruto.model;
 
-import com.naruto.enuns.CategoriaNinja;
 import jakarta.persistence.DiscriminatorValue;
 import jakarta.persistence.Entity;
 import lombok.NoArgsConstructor;

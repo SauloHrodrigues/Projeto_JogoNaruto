@@ -21,45 +21,47 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(PersonagemNaoEncontradoException.class)
-    public ResponseEntity<Object> handlerPersonagemNaoEncontradoException(PersonagemNaoEncontradoException ex){
+    public ResponseEntity<Object> handlerPersonagemNaoEncontradoException(PersonagemNaoEncontradoException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("Erro. ", ex.getMessage()));
     }
 
     @ExceptionHandler(PersonagemJaCadastradoException.class)
-    public ResponseEntity<Object> handlerPersonagemJaCadastradoException(PersonagemJaCadastradoException ex){
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("Erro. ", ex.getMessage()));
+    public ResponseEntity<Object> handlerPersonagemJaCadastradoException(PersonagemJaCadastradoException ex) {
+        return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorResponse("Erro. ", ex.getMessage()));
     }
 
     @ExceptionHandler(JogadorForaDoJogoException.class)
-    public ResponseEntity<Object> handlerJogadorNaoCadastradoException(JogadorForaDoJogoException ex){
+    public ResponseEntity<Object> handlerJogadorNaoCadastradoException(JogadorForaDoJogoException ex) {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ErrorResponse("Erro. ", ex.getMessage()));
     }
+
     @ExceptionHandler(JutsuNaoPertenceAoJogadoException.class)
-    public ResponseEntity<Object> handlerJutsuNaoPertenceAoJogadoException(JutsuNaoPertenceAoJogadoException ex){
+    public ResponseEntity<Object> handlerJutsuNaoPertenceAoJogadoException(JutsuNaoPertenceAoJogadoException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("Erro. ", ex.getMessage()));
     }
 
     @ExceptionHandler(InsuficienciaDeChakrasException.class)
-    public ResponseEntity<Object> handlerInsuficienciaDeChakrasException(InsuficienciaDeChakrasException ex){
+    public ResponseEntity<Object> handlerInsuficienciaDeChakrasException(InsuficienciaDeChakrasException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("Erro. ", ex.getMessage()));
     }
 
     @ExceptionHandler(InaptoParaDefesaException.class)
-    public ResponseEntity<Object> handlerInaptoParaDefesaException(InaptoParaDefesaException ex){
+    public ResponseEntity<Object> handlerInaptoParaDefesaException(InaptoParaDefesaException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("Erro. ", ex.getMessage()));
     }
 
-   @ExceptionHandler(JogoInativoException.class)
-    public ResponseEntity<Object> handlerJogoInativoException (JogoInativoException  ex){
+    @ExceptionHandler(JogoInativoException.class)
+    public ResponseEntity<Object> handlerJogoInativoException(JogoInativoException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("Erro. ", ex.getMessage()));
     }
 
-@ExceptionHandler(JogoPendenteException.class)
-    public ResponseEntity<Object> handlerJogoPendenteException (JogoPendenteException  ex){
+    @ExceptionHandler(JogoPendenteException.class)
+    public ResponseEntity<Object> handlerJogoPendenteException(JogoPendenteException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("Erro. ", ex.getMessage()));
     }
-@ExceptionHandler(JutsuJaExistenteException.class)
-    public ResponseEntity<Object> handlerJutsuJaExistenteException  (JutsuJaExistenteException   ex){
+
+    @ExceptionHandler(JutsuJaExistenteException.class)
+    public ResponseEntity<Object> handlerJutsuJaExistenteException(JutsuJaExistenteException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ErrorResponse("Erro. ", ex.getMessage()));
     }
 
@@ -73,8 +75,6 @@ public class GlobalExceptionHandler {
 
         return ResponseEntity.badRequest().body(erros);
     }
-
-
 
     static class ErrorResponse {
         private String tipoErro;

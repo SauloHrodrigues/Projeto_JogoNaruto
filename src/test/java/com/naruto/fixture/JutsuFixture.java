@@ -12,27 +12,26 @@ public class JutsuFixture {
         return new JutsuRequestDto(nome,dano,consumoDeChkra);
     }
 
-
-    public static JutsuResponseDto response(Long id, JutsuRequestDto dto){
-        return new JutsuResponseDto(id, dto.nome(), dto.dano(), dto.consumoDeChakra());
+    public static Jutsu entity(Long id,JutsuRequestDto dto){
+        return Jutsu.builder()
+                .id(id)
+                .nome(dto.nome())
+                .dano(dto.dano())
+                .consumoDeChakra(dto.consumoDeChakra())
+                .build();
     }
 
-    public static Jutsu entity(Long id, String nome, int dano, int consumoDeChakra){
+    public static Jutsu entity(Long id,String nome,int dano,int consumo ){
         return Jutsu.builder()
                 .id(id)
                 .nome(nome)
                 .dano(dano)
-                .consumoDeChakra(consumoDeChakra)
+                .consumoDeChakra(consumo)
                 .build();
     }
 
-    public static Jutsu entity(JutsuRequestDto dto){
-       return entity(
-               1L,
-               dto.nome(),
-               dto.dano(),
-               dto.consumoDeChakra()
-       );
+    public static JutsuResponseDto response(Jutsu jutsu){
+        return new JutsuResponseDto(jutsu.getId(), jutsu.getNome(), jutsu.getDano(), jutsu.getConsumoDeChakra());
     }
 
     public static Map<String, JutsuResponseDto> mapJustsuResponseDto(JutsuResponseDto dto){
@@ -40,6 +39,4 @@ public class JutsuFixture {
         jutsusMap.put(dto.nome(),dto);
         return jutsusMap;
     }
-
-
 }

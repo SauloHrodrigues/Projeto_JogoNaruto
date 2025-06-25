@@ -16,7 +16,7 @@ public interface PersonagemMapper {
     @Mapping(target = "categoriaNinja", expression = "java(categoriaNinja(personagem))")
     PersonagemResponseDto toResponseDto(Personagem personagem);
     @Mapping(target = "categoriaNinja", expression = "java(categoriaNinja(personagem))")
-    List<PersonagemResponseDto> toResponseDto(List<Personagem> personagem);
+    List<PersonagemResponseDto> toResponseDtoList(List<Personagem> personagem);
 
     default Personagem toEntity(NovoPersonagemDTO dto) {
         return switch (dto.categoriaNinja().toUpperCase()) {
@@ -41,6 +41,7 @@ public interface PersonagemMapper {
 
     default void copyCommonFields(NovoPersonagemDTO dto, Personagem personagem) {
         personagem.setNome(dto.nome());
+        personagem.setIdade(dto.idade());
         personagem.aumentarVidas(dto.vida());
         personagem.adicionarChakra(dto.chakra());
     }

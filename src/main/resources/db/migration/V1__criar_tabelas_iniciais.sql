@@ -8,7 +8,8 @@ CREATE TABLE personagem (
     vida INT,
     categoria_ninja VARCHAR(50) NOT NULL CHECK (
         categoria_ninja IN ('NINJA_DE_NINJUTSU', 'NINJA_DE_GENJUTSU', 'NINJA_DE_TAIJUTSU')
-    )
+    ),
+    idade INT
 );
 
 -- =================
@@ -28,15 +29,15 @@ CREATE TABLE jutsu (
 -- =================
 
 -- Personagem 1
-INSERT INTO personagem (nome, chakra, vida, categoria_ninja)
-VALUES ('saulo', 10, 10, 'NINJA_DE_TAIJUTSU');
+INSERT INTO personagem (nome, chakra, vida, categoria_ninja, idade)
+VALUES ('saulo', 10, 10, 'NINJA_DE_TAIJUTSU',46);
 
 INSERT INTO jutsu (nome, dano, consumo_de_chakra, personagem_id)
 VALUES ('soco', 10, 5, (SELECT MAX(id) FROM personagem));
 
 -- Personagem 2
-INSERT INTO personagem (nome, chakra, vida, categoria_ninja)
-VALUES ('combatente01', 100, 100, 'NINJA_DE_NINJUTSU');
+INSERT INTO personagem (nome, chakra, vida, categoria_ninja, idade)
+VALUES ('combatente01', 100, 100, 'NINJA_DE_NINJUTSU',25);
 
 INSERT INTO jutsu (nome, dano, consumo_de_chakra, personagem_id)
 VALUES
@@ -44,8 +45,8 @@ VALUES
 ('murro', 10, 5, (SELECT MAX(id) FROM personagem));
 
 -- Personagem 3
-INSERT INTO personagem (nome, chakra, vida, categoria_ninja)
-VALUES ('combatente02', 100, 100, 'NINJA_DE_GENJUTSU');
+INSERT INTO personagem (nome, chakra, vida, categoria_ninja, idade)
+VALUES ('combatente02', 100, 100, 'NINJA_DE_GENJUTSU',30);
 
 INSERT INTO jutsu (nome, dano, consumo_de_chakra, personagem_id)
 VALUES

@@ -33,11 +33,10 @@ public abstract class Personagem {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
     private String nome;
 
-//    @Setter(value = AccessLevel.PRIVATE)
-//    @OneToMany(mappedBy = "personagem", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-//    private List<Jutsu> jutsus = new ArrayList<>();
+    private int idade;
 
     @Setter(value = AccessLevel.PRIVATE)
     @OneToMany(mappedBy = "personagem", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
@@ -46,12 +45,10 @@ public abstract class Personagem {
 
     @Setter(value = AccessLevel.PRIVATE)
     private int chakra;
+
     @Setter(value = AccessLevel.PRIVATE)
     private int vida;
 
-    //    public void adicionarJutsu(Jutsu jutsu){
-//        jutsus.add(jutsu);
-//    }
     public void adicionarJutsu(Jutsu jutsu) {
         jutsus.put(jutsu.getNome().toLowerCase(), jutsu);
         jutsu.setPersonagem(this);
@@ -85,11 +82,12 @@ public abstract class Personagem {
     @Override
     public String toString() {
         return "Personagem{" +
-                "id=" + id +
-                ", nome='" + nome + '\'' +
-                ", jutsus=" + jutsus +
-                ", chakra=" + chakra +
-                ", vida=" + vida +
+                "id =" + id +
+                ", nome ='" + nome + '\'' +
+                ", idade = "+ idade +
+                ", jutsus =" + jutsus +
+                ", chakra =" + chakra +
+                ", vida =" + vida +
                 '}';
     }
 
