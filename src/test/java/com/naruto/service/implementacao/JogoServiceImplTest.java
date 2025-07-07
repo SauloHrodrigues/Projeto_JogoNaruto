@@ -4,7 +4,6 @@ import com.naruto.dto.jogo.AtaqueRequestDto;
 import com.naruto.dto.jogo.AtaqueResponseDto;
 import com.naruto.dto.jogo.NovoJogoRequestDto;
 import com.naruto.dto.jogo.NovoJogoResponseDto;
-import com.naruto.dto.personagem.PersonagemResponseDto;
 import com.naruto.exceptions.Jogo.InaptoParaDefesaException;
 import com.naruto.exceptions.Jogo.JogoPendenteException;
 import com.naruto.fixture.JogoFixture;
@@ -59,14 +58,17 @@ class JogoServiceImplTest {
     void setUp() {
        personagemMapper = Mappers.getMapper(PersonagemMapper.class);
 
-        raseganJutsu = JutsuFixture.entity(1L, "Rasengan", 20, 10);
-        hachimonJutsu = JutsuFixture.entity(2L, "Hachimon", 25, 8);
-        punhoSuaveJutsu = JutsuFixture.entity(3L, "Punho Suave", 5, 2);
+        raseganJutsu = JutsuFixture.toEntity(1L, "Rasengan", 20, 10);
+        hachimonJutsu = JutsuFixture.toEntity(2L, "Hachimon", 25, 8);
+        punhoSuaveJutsu = JutsuFixture.toEntity(3L, "Punho Suave", 5, 2);
 
-        naruto = PersonagemFixture.ninjaDeNinjutsuEntity(1L,"naruto uzumaki",5,10, 10,punhoSuaveJutsu);
-        sasuke = PersonagemFixture.ninjaDeTaijutsuEntity(2L, "sasuke uchiha",15,5, 10,raseganJutsu);
-        kakashi = PersonagemFixture.ninjaDeGenjutsuEntity(3L, "kakashi hatake", 5,10,10,hachimonJutsu);
+        naruto = (NinjaDeNinjutsu) PersonagemFixture.toEntity(1L,"naruto uzumaki","NINJA_DE_NINJUTSU",10, 10,20);
+        sasuke = (NinjaDeTaijutsu) PersonagemFixture.toEntity(2L, "sasuke uchiha", "NINJA_DE_TAIJUTSU",15,5, 10);
+        kakashi = (NinjaDeGenjutsu) PersonagemFixture.toEntity(3L, "kakashi hatake","NINJA_DE_GENJUTSU", 5,10,10);
 
+        naruto.adicionarJutsu(punhoSuaveJutsu);
+        sasuke.adicionarJutsu(raseganJutsu);
+        kakashi.adicionarJutsu(hachimonJutsu);
     }
 
     @Test

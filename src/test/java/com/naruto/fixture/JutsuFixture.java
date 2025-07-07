@@ -12,31 +12,35 @@ public class JutsuFixture {
         return new JutsuRequestDto(nome,dano,consumoDeChkra);
     }
 
-    public static Jutsu entity(Long id,JutsuRequestDto dto){
-        return Jutsu.builder()
-                .id(id)
-                .nome(dto.nome())
-                .dano(dto.dano())
-                .consumoDeChakra(dto.consumoDeChakra())
-                .build();
+    public static Jutsu toEntity(Long id, JutsuRequestDto dto){
+        return toEntity(id,dto.nome(), dto.dano(), dto.consumoDeChakra());
     }
 
-    public static Jutsu entity(Long id,String nome,int dano,int consumo ){
+    public static Jutsu toEntity(Long id, String nome, int dano, int consumoDeChakra){
         return Jutsu.builder()
                 .id(id)
                 .nome(nome)
                 .dano(dano)
-                .consumoDeChakra(consumo)
+                .consumoDeChakra(consumoDeChakra)
                 .build();
     }
 
-    public static JutsuResponseDto response(Jutsu jutsu){
+
+    public static JutsuResponseDto toResponseDto(Jutsu jutsu){
         return new JutsuResponseDto(jutsu.getId(), jutsu.getNome(), jutsu.getDano(), jutsu.getConsumoDeChakra());
     }
 
-    public static Map<String, JutsuResponseDto> mapJustsuResponseDto(JutsuResponseDto dto){
+
+    public static Map<String, JutsuResponseDto> toResponseDto(Map<String, Jutsu> dto) {
         Map<String, JutsuResponseDto> jutsusMap = new HashMap<>();
-        jutsusMap.put(dto.nome(),dto);
+
+        for (Map.Entry<String, Jutsu> jutsu : dto.entrySet()) {
+
+            JutsuResponseDto responseDto = toResponseDto(jutsu.getValue());
+
+            jutsusMap.put(responseDto.nome(), responseDto);
+        }
         return jutsusMap;
     }
+
 }

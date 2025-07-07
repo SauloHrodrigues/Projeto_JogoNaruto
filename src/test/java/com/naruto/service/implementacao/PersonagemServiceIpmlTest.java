@@ -67,16 +67,17 @@ class PersonagemServiceIpmlTest {
     void setUp() {
 
         raseganRequestDto = JutsuFixture.requestDto("Rasengan", 10, 25);
-        raseganEntity = JutsuFixture.entity(1L, raseganRequestDto);
+        raseganEntity = JutsuFixture.toEntity(1L, raseganRequestDto);
 
         punhoSuaveRequestDto = JutsuFixture.requestDto("Punho Suave", 20, 30);
-        punhoSuaveEntity = JutsuFixture.entity(2L, punhoSuaveRequestDto);
-        punhoSuaveResponseDto = JutsuFixture.response(punhoSuaveEntity);
+        punhoSuaveEntity = JutsuFixture.toEntity(2L, punhoSuaveRequestDto);
+        punhoSuaveResponseDto = JutsuFixture.toResponseDto(punhoSuaveEntity);
 
 
         ninjaNarutoRequestDTO = PersonagemFixture.novoDto("naruto uzumaki", "NINJA_DE_NINJUTSU", 5, 10, 10, raseganRequestDto);
-        ninjaNarutoEntity = PersonagemFixture.ninjaDeNinjutsuEntity(1L, ninjaNarutoRequestDTO, raseganEntity);
-        ninjaNarutoResponseDTO = PersonagemFixture.responseDto(ninjaNarutoEntity.getId(), ninjaNarutoRequestDTO, JutsuFixture.response(raseganEntity));
+        ninjaNarutoEntity = (NinjaDeNinjutsu) PersonagemFixture.toEntity(1L, ninjaNarutoRequestDTO);
+        ninjaNarutoEntity.adicionarJutsu(raseganEntity);
+        ninjaNarutoResponseDTO = PersonagemFixture.toResponseDto(ninjaNarutoEntity);
     }
 
     @Test

@@ -8,6 +8,7 @@ import com.naruto.model.Jutsu;
 import com.naruto.model.NinjaDeGenjutsu;
 import com.naruto.model.NinjaDeNinjutsu;
 import com.naruto.model.NinjaDeTaijutsu;
+import com.naruto.model.Personagem;
 import java.util.Map;
 
 public class PersonagemFixture {
@@ -23,59 +24,40 @@ public class PersonagemFixture {
         );
     }
 
-    public static PersonagemResponseDto responseDto(Long id, NovoPersonagemDTO dto, JutsuResponseDto jutsusResponse ){
-        Map<String, JutsuResponseDto> jutsusMap = JutsuFixture.mapJustsuResponseDto(jutsusResponse);
+    public static Personagem toEntity(Long id,NovoPersonagemDTO dto){
+        return toEntity(id,dto.nome(), dto.categoriaNinja(), dto.idade(), dto.chakra(), dto.vida());
+    }
+    public static Personagem toEntity(Long id,String nome,String categoriaNinja, int idade,int chakra, int vida){
+        Personagem personagem;
+        switch (categoriaNinja.toUpperCase()) {
+            case "NINJA_DE_NINJUTSU" -> personagem = new NinjaDeNinjutsu();
+            case "NINJA_DE_GENJUTSU" -> personagem = new NinjaDeGenjutsu();
+            case "NINJA_DE_TAIJUTSU" -> personagem = new NinjaDeTaijutsu();
+            default -> throw new IllegalArgumentException("Categoria inválida");
+        }
+        personagem.setId(id);
+        personagem.setNome(nome);
+        personagem.setIdade(idade);
+        personagem.adicionarChakra(chakra);
+        personagem.aumentarVidas(vida);
+        return personagem;
+    }
+
+    public static PersonagemResponseDto toResponseDto(NinjaDeNinjutsu ninjutsu){
+        return toResponseDto(ninjutsu,"NINJA_DE_NINJUTSU");
+    }
+    public static PersonagemResponseDto toResponseDto(NinjaDeGenjutsu genjutsu){
+        return toResponseDto(genjutsu, "NINJA_DE_GENJUTSU");
+    }
+    public static PersonagemResponseDto toResponseDto(NinjaDeTaijutsu taijutsu){
+        return toResponseDto(taijutsu,"NINJA_DE_TAIJUTSU");
+    }
+    public static PersonagemResponseDto toResponseDto(Personagem personagem, String ninja) {
+       Map<String,JutsuResponseDto> jutsuResponseDto = JutsuFixture.toResponseDto(personagem.getJutsus());
         return new PersonagemResponseDto(
-                id,
-                dto.nome(),
-                dto.categoriaNinja(),
-                dto.idade(),
-                dto.chakra(),
-                dto.vida(),
-                jutsusMap
+                personagem.getId(), personagem.getNome(),
+                ninja, personagem.getIdade(), personagem.getChakra(),
+                personagem.getVida(), jutsuResponseDto
         );
-    }
-
-    public static NinjaDeTaijutsu ninjaDeTaijutsuEntity(Long id, NovoPersonagemDTO dto, Jutsu jutsu){
-        return ninjaDeTaijutsuEntity(id,dto.nome(), dto.idade(), dto.chakra(), dto.vida(), jutsu);
-    }
-
-    public static NinjaDeTaijutsu ninjaDeTaijutsuEntity(Long id, String nome,int idade,int chakra,int vida, Jutsu jutsu){
-        NinjaDeTaijutsu taijutsu = new NinjaDeTaijutsu();
-        taijutsu.setId(id);
-        taijutsu.setNome(nome.toLowerCase());
-        taijutsu.setIdade(idade);
-        taijutsu.adicionarChakra(chakra);
-        taijutsu.aumentarVidas(vida);
-        taijutsu.adicionarJutsu(jutsu);
-        return taijutsu;
-    }
-
-    public static NinjaDeGenjutsu ninjaDeGenjutsuEntity(Long id, NovoPersonagemDTO dto, Jutsu jutsu){
-        return ninjaDeGenjutsuEntity(id,dto.nome(), dto.idade(), dto.chakra(), dto.vida(), jutsu);
-    }
-    public static NinjaDeGenjutsu ninjaDeGenjutsuEntity(Long id, String nome,int idade,int chakra,int vida, Jutsu jutsu){
-        NinjaDeGenjutsu genjutsu = new NinjaDeGenjutsu();
-        genjutsu.setId(id);
-        genjutsu.setNome(nome.toLowerCase());
-        genjutsu.setIdade(idade);
-        genjutsu.adicionarChakra(chakra);
-        genjutsu.aumentarVidas(vida);
-        genjutsu.adicionarJutsu(jutsu);
-        return genjutsu;
-    }
-
-    public static NinjaDeNinjutsu ninjaDeNinjutsuEntity(Long id, NovoPersonagemDTO dto, Jutsu jutsu){
-        return ninjaDeNinjutsuEntity(id,dto.nome(), dto.idade(), dto.chakra(), dto.vida(), jutsu);
-    }
-    public static NinjaDeNinjutsu ninjaDeNinjutsuEntity(Long id, String nome,int idade,int chakra,int vida, Jutsu jutsu){
-        NinjaDeNinjutsu ninjutsu = new NinjaDeNinjutsu();
-        ninjutsu.setId(id);
-        ninjutsu.setNome(nome.toLowerCase());
-        ninjutsu.setIdade(idade);
-        ninjutsu.adicionarChakra(chakra);
-        ninjutsu.aumentarVidas(vida);
-        ninjutsu.adicionarJutsu(jutsu);
-        return ninjutsu;
     }
 }
