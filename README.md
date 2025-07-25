@@ -1,7 +1,7 @@
-# Projeto_Naruto_Refatorado
+# Projeto Jogo Naruto
 
 
-##### NPM (https://github.com/SauloHrodrigues/Projeto_Naruto_Refatorado/blob/main/LICENSE)
+##### NPM (https://github.com/SauloHrodrigues/Projeto_JogoNaruto/blob/main/LICENSE)
 
 #### Sobre o projeto
 
@@ -125,7 +125,7 @@ O ninja atacado pode/deve fazer sua defesa que, aleatoriamente, pode ou não ter
 
 O ninja que não tiver mais chakras ou vida, perde o jogo.
 
-##### Projeto no GitHub:  https://github.com/SauloHrodrigues/Projeto_Naruto_Refatorado.git
+##### Projeto no GitHub:  https://github.com/SauloHrodrigues/Projeto_JogoNaruto.git
 
 ## Autor:
 
