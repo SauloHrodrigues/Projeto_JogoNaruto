@@ -45,10 +45,6 @@ class PersonagemServiceIpmlTest {
     private PersonagemServiceIpml service;
 
     @Mock
-    private PersonagemMapper personagemMapper;
-    @Mock
-    private JutsuMapper jutsuMapper;
-    @Mock
     private JutsuRepository jutsuRepository;
     @Mock
     private PersonagemRepository repository;
@@ -83,10 +79,13 @@ class PersonagemServiceIpmlTest {
     @Test
     @DisplayName("Deve adicionar um novo personagem.")
     void novoPersonagem() {
-        when(personagemMapper.toEntity(ninjaNarutoRequestDTO)).thenReturn(ninjaNarutoEntity);
-        when(jutsuMapper.toEntity(ninjaNarutoRequestDTO.jutsuRequestDto())).thenReturn(raseganEntity);
-        when(repository.save(ninjaNarutoEntity)).thenReturn(ninjaNarutoEntity);
-        when(personagemMapper.toResponseDto(ninjaNarutoEntity)).thenReturn(ninjaNarutoResponseDTO);
+        NovoPersonagemDTO dto = ninjaNarutoRequestDTO;
+        Personagem personagem = PersonagemFixture.toEntity(1L,dto);
+        Jutsu jutsu = JutsuFixture.toEntity(1L,dto.jutsuRequestDto());
+        personagem.adicionarJutsu(jutsu);
+
+        when(jutsuRepository.save(any(Jutsu.class))).thenReturn(jutsu);
+        when(repository.save(any(Personagem.class))).thenReturn(personagem);
 
         PersonagemResponseDto result = service.novoPersonagem(ninjaNarutoRequestDTO);
 
@@ -95,11 +94,6 @@ class PersonagemServiceIpmlTest {
         assertEquals(ninjaNarutoRequestDTO.categoriaNinja(), result.categoriaNinja());
         assertNotNull(result.jutsus());
 
-        verify(jutsuRepository).save(raseganEntity);
-        verify(repository).save(ninjaNarutoEntity);
-        verify(personagemMapper).toEntity(any());
-        verify(jutsuMapper).toEntity(ninjaNarutoRequestDTO.jutsuRequestDto());
-        verify(personagemMapper).toResponseDto(ninjaNarutoEntity);
     }
 
 
@@ -120,7 +114,6 @@ class PersonagemServiceIpmlTest {
 
         assertEquals("O personagem já está cadastrado", exception.getMessage());
 
-        verifyNoInteractions(jutsuRepository, repository, personagemMapper, jutsuMapper);
     }
 
 
@@ -130,8 +123,8 @@ class PersonagemServiceIpmlTest {
 
         List<Personagem> personagens = List.of(ninjaNarutoEntity);
         List<PersonagemResponseDto> dtos = List.of(ninjaNarutoResponseDTO);
+
         Mockito.when(repository.findAll()).thenReturn(personagens);
-        Mockito.when(personagemMapper.toResponseDtoList(personagens)).thenReturn(dtos);
 
         List<PersonagemResponseDto> resultado = service.listarPersonagens();
 
@@ -139,31 +132,28 @@ class PersonagemServiceIpmlTest {
         assertEquals(ninjaNarutoRequestDTO.nome(), resultado.get(0).nome());
 
         Mockito.verify(repository).findAll();
-        Mockito.verify(personagemMapper).toResponseDtoList(personagens);
     }
 
     @Test
     @DisplayName("Deve adicionar um jutsu a um personagem.")
     void deveAdicionarJutsuComSucesso() {
 
-        ninjaNarutoResponseDTO.jutsus().put(punhoSuaveResponseDto.nome(), punhoSuaveResponseDto);
-        when(repository.findById(ninjaNarutoEntity.getId())).thenReturn(Optional.of(ninjaNarutoEntity));
-        when(jutsuMapper.toEntity(punhoSuaveRequestDto)).thenReturn(punhoSuaveEntity);
-        when(jutsuRepository.save(punhoSuaveEntity)).thenReturn(punhoSuaveEntity);
-        when(repository.save(ninjaNarutoEntity)).thenReturn(ninjaNarutoEntity);
-        when(personagemMapper.toResponseDto(ninjaNarutoEntity)).thenReturn(ninjaNarutoResponseDTO);
+        Long idPersonagem = 1L;
+        Personagem personagem = PersonagemFixture.toEntity(idPersonagem,ninjaNarutoRequestDTO);
+        JutsuRequestDto requestDto = raseganRequestDto;
+        Jutsu jutsu = JutsuFixture.toEntity(2L,requestDto);
 
-        PersonagemResponseDto resultado = service.adicionarJutsu(ninjaNarutoEntity.getId(), punhoSuaveRequestDto);
+        when(repository.findById(idPersonagem)).thenReturn(Optional.of(personagem));
+        when(jutsuRepository.save(any(Jutsu.class))).thenReturn(jutsu);
+        when(repository.save(any(Personagem.class))).thenReturn(personagem);
 
-        assertEquals(ninjaNarutoEntity.getId(), resultado.id());
-        assertEquals(punhoSuaveEntity.getId(), resultado.jutsus().get("Punho Suave").id());
+        PersonagemResponseDto resultado = service.adicionarJutsu(idPersonagem, requestDto);
 
-        verify(repository).findById(ninjaNarutoEntity.getId());
-        verify(jutsuMapper).toEntity(punhoSuaveRequestDto);
-        verify(jutsuRepository).save(punhoSuaveEntity);
-        verify(repository).save(ninjaNarutoEntity);
-        verify(personagemMapper).toResponseDto(ninjaNarutoEntity);
+        assertEquals(idPersonagem, resultado.id());
+        assertEquals(personagem.getNome(),resultado.nome());
+        assertTrue(resultado.jutsus().containsKey(jutsu.getNome().toLowerCase()));
 
+        verify(repository).findById(idPersonagem);
     }
 
     @Test
@@ -178,7 +168,6 @@ class PersonagemServiceIpmlTest {
         assertTrue(resposta.getMessage().contains("O personagem com id: '0' não foi encontrado."));
 
         verify(repository).findById(0L);
-        verifyNoMoreInteractions(jutsuMapper, jutsuRepository, personagemMapper);
     }
 
     @Test

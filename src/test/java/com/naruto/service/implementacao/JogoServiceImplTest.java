@@ -51,7 +51,6 @@ class JogoServiceImplTest {
     private NinjaDeTaijutsu sasuke;
     private NinjaDeGenjutsu kakashi;
 
-
     private PersonagemMapper personagemMapper;
 
     @BeforeEach

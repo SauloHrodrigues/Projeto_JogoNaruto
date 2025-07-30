@@ -36,10 +36,10 @@ public class PersonagemServiceIpml implements PersonagemService, PersonagemSevic
         validarNovoPersonagem(dto.nome());
         Personagem personagem = personagemMapper.toEntity(normalize(dto));
         Jutsu jutsu = jutsuMapper.toEntity(dto.jutsuRequestDto());
-        jutsuRepository.save(jutsu);
-        personagem.adicionarJutsu(jutsu);
-        repository.save(personagem);
-        return personagemMapper.toResponseDto(personagem);
+        Jutsu jutsuSalvo= jutsuRepository.save(jutsu);
+        personagem.adicionarJutsu(jutsuSalvo);
+        Personagem personagemSalvo = repository.save(personagem);
+        return personagemMapper.toResponseDto(personagemSalvo);
     }
 
     @Override
@@ -61,8 +61,9 @@ public class PersonagemServiceIpml implements PersonagemService, PersonagemSevic
 
     @Override
     public Personagem buscar(Long id){
-        return repository.findById(id).orElseThrow(()->new PersonagemNaoEncontradoException(
+        Personagem personagem= repository.findById(id).orElseThrow(()->new PersonagemNaoEncontradoException(
                 "O personagem com id: \'" + id +"\' não foi encontrado."));
+        return personagem;
     }
 
     @Override
@@ -81,10 +82,10 @@ public class PersonagemServiceIpml implements PersonagemService, PersonagemSevic
         Personagem personagem = buscar(idPersonagem);
         validaPersonagemSemOJutsu(personagem,jutsuDto.nome());
         Jutsu jutsu = jutsuMapper.toEntity(jutsuDto);
-        jutsuRepository.save(jutsu);
-        personagem.adicionarJutsu(jutsu);
-        repository.save(personagem);
-        return personagemMapper.toResponseDto(personagem);
+        Jutsu novoJutsu = jutsuRepository.save(jutsu);
+        personagem.adicionarJutsu(novoJutsu);
+        Personagem personagemSalvo = repository.save(personagem);
+        return personagemMapper.toResponseDto(personagemSalvo);
     }
 
     @Override
