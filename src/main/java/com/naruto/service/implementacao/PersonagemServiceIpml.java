@@ -25,8 +25,9 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PersonagemServiceIpml implements PersonagemService, PersonagemSeviceUsoInterno {
 
-    private final PersonagemMapper personagemMapper;
-    private final JutsuMapper jutsuMapper;
+    private PersonagemMapper personagemMapper = PersonagemMapper.INSTANCE;
+    private JutsuMapper jutsuMapper = JutsuMapper.INSTANCE;
+
     private final PersonagemRepository repository;
     private final JutsuRepository jutsuRepository;
 

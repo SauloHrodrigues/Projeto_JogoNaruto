@@ -9,9 +9,12 @@ import com.naruto.model.Personagem;
 import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface PersonagemMapper {
+
+    PersonagemMapper INSTANCE = Mappers.getMapper(PersonagemMapper.class);
 
     @Mapping(target = "categoriaNinja", expression = "java(categoriaNinja(personagem))")
     PersonagemResponseDto toResponseDto(Personagem personagem);
