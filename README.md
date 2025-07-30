@@ -3,13 +3,33 @@
 
 ##### NPM (https://github.com/SauloHrodrigues/Projeto_Naruto_Refatorado/blob/main/LICENSE)
 
-#### Sobre o projeto
+### Sobre o projeto
 
 O presente projeto foi desencolvido em forma de desafio, com o objetico de avaliar nossas habilidades em programação orientada a objetos, utilizando classes, interfaces, heranças, polimorfismo e etc. Para isso, foi desenvolvido uma aplicação, apenas backend, em Java. A aplicação esta em forma de CRUD e conta com a seguinte estrutura:
 
-#### Estrutura do desenvolvimento
+### Como rodar o projeto:
 
-##### Atributos do Personagem:
+#### Configurar o banco:
+Ao baixar o projeto, crie  um arquivo **.env** na raiz do mesmo, e crie as seguintes variáveis de ambientes:
+
+* **POSTGRES_DB**= (colocar o nome do container que deve ser criado)
+* **POSTGRES_USER**=(colocar um nome de usuário postgres)
+* **POSTGRES_PASSWORD**= (Define a senha para o usuário informado em POSTGRES_USER)
+* **SPRING_DATASOURCE_URL**=(Essa variável é usada pela aplicação Spring para definir a URL de conexão com o banco de dados.)
+* **SPRING_DATASOURCE_USERNAME**=(Usuário que a aplicação Spring vai usar para se autenticar no banco.)
+* **SPRING_DATASOURCE_PASSWORD**=( Senha correspondente ao usuário acima.)
+
+Após a criação das variáveis de ambientes, abra o console, e, na sub-pasta docker de o seguinte comando:
+
+```bash
+docker-compose up --build
+```
+
+Feito tais configurações, é só dar play no projeto;
+
+### Estrutura do desenvolvimento
+
+#### Atributos do Personagem:
 
 • Nome (String)
 

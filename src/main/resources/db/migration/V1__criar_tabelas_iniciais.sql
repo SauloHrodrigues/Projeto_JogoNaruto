@@ -2,7 +2,7 @@
 -- Tabela de Personagem
 -- =====================
 CREATE TABLE personagem (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    id BIGSERIAL PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     chakra INT,
     vida INT,
@@ -16,7 +16,7 @@ CREATE TABLE personagem (
 -- Tabela de Jutsus
 -- =================
 CREATE TABLE jutsu (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    id BIGSERIAL PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     dano INT NOT NULL,
     consumo_de_chakra INT NOT NULL,
@@ -30,34 +30,34 @@ CREATE TABLE jutsu (
 
 -- Personagem 1
 INSERT INTO personagem (nome, chakra, vida, categoria_ninja, idade)
-VALUES ('saulo', 10, 10, 'NINJA_DE_TAIJUTSU',46);
+VALUES ('saulo', 10, 10, 'NINJA_DE_TAIJUTSU', 46);
 
 INSERT INTO jutsu (nome, dano, consumo_de_chakra, personagem_id)
-VALUES ('soco', 10, 5, (SELECT MAX(id) FROM personagem));
+VALUES ('soco', 10, 5, (SELECT id FROM personagem WHERE nome = 'saulo'));
 
 -- Personagem 2
 INSERT INTO personagem (nome, chakra, vida, categoria_ninja, idade)
-VALUES ('combatente01', 100, 100, 'NINJA_DE_NINJUTSU',25);
+VALUES ('combatente01', 100, 100, 'NINJA_DE_NINJUTSU', 25);
 
 INSERT INTO jutsu (nome, dano, consumo_de_chakra, personagem_id)
 VALUES
-('chute', 10, 20, (SELECT MAX(id) FROM personagem)),
-('murro', 10, 5, (SELECT MAX(id) FROM personagem));
+('chute', 10, 20, (SELECT id FROM personagem WHERE nome = 'combatente01')),
+('murro', 10, 5, (SELECT id FROM personagem WHERE nome = 'combatente01'));
 
 -- Personagem 3
 INSERT INTO personagem (nome, chakra, vida, categoria_ninja, idade)
-VALUES ('combatente02', 100, 100, 'NINJA_DE_GENJUTSU',30);
+VALUES ('combatente02', 100, 100, 'NINJA_DE_GENJUTSU', 30);
 
 INSERT INTO jutsu (nome, dano, consumo_de_chakra, personagem_id)
 VALUES
-('braçada', 10, 5, (SELECT MAX(id) FROM personagem)),
-('cotuvelada', 10, 5, (SELECT MAX(id) FROM personagem));
+('braçada', 10, 5, (SELECT id FROM personagem WHERE nome = 'combatente02')),
+('cotuvelada', 10, 5, (SELECT id FROM personagem WHERE nome = 'combatente02'));
 
 -- ===================
 -- Tabela de Jogos
 -- ===================
 CREATE TABLE tabela_de_jogos (
-    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    id BIGSERIAL PRIMARY KEY,
     personagem1_id BIGINT,
     personagem2_id BIGINT,
     pontos_ninja01 INT,
