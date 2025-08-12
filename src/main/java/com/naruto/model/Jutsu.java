@@ -31,6 +31,10 @@ public class Jutsu {
     @JoinColumn(name = "personagem_id")
     private Personagem personagem;
 
+    public void setNome(String nome) {
+        this.nome = (nome != null) ? nome.toLowerCase() : null;
+    }
+
     @Override
     public String toString() {
         return "Jutsu{" +

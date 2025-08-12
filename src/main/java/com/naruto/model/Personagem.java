@@ -49,6 +49,10 @@ public abstract class Personagem {
     @Setter(value = AccessLevel.PRIVATE)
     private int vida;
 
+    public void setNome(String nome) {
+        this.nome = (nome != null) ? nome.toLowerCase() : null;
+    }
+
     public void adicionarJutsu(Jutsu jutsu) {
         jutsus.put(jutsu.getNome().toLowerCase(), jutsu);
         jutsu.setPersonagem(this);

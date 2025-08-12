@@ -34,7 +34,7 @@ public class PersonagemServiceIpml implements PersonagemService, PersonagemSevic
     @Override
     public PersonagemResponseDto novoPersonagem(NovoPersonagemDTO dto) {
         validarNovoPersonagem(dto.nome());
-        Personagem personagem = personagemMapper.toEntity(normalize(dto));
+        Personagem personagem = personagemMapper.toEntity(dto);
         Jutsu jutsu = jutsuMapper.toEntity(dto.jutsuRequestDto());
         Jutsu jutsuSalvo= jutsuRepository.save(jutsu);
         personagem.adicionarJutsu(jutsuSalvo);
@@ -112,21 +112,4 @@ public class PersonagemServiceIpml implements PersonagemService, PersonagemSevic
         }
     }
 
-
-    private NovoPersonagemDTO normalize(NovoPersonagemDTO dto){
-        return new NovoPersonagemDTO(
-                dto.nome().toLowerCase(),
-                dto.categoriaNinja(), dto.idade(),
-                dto.chakra(), dto.vida(), dto.jutsuRequestDto()
-        );
-    }
-
-
-    private JutsuRequestDto normalize(JutsuRequestDto dto){
-        return new JutsuRequestDto(
-                dto.nome().toLowerCase(),
-                dto.dano(),
-                dto.consumoDeChakra()
-        );
-    }
 }
