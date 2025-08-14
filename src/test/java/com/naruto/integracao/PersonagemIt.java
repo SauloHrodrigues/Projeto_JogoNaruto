@@ -39,7 +39,7 @@ public class PersonagemIt {
     @DisplayName("Deve adicionar um novo personagem.")
     public void deveCriarUmPersonagemComSucesso(){
         JutsuRequestDto jutsu = JutsuFixture.requestDto("soco",10,15);
-        NovoPersonagemDTO dto = PersonagemFixture.novoDto("Tereza","NINJA_DE_NINJUTSU",50,10,10, jutsu);
+        NovoPersonagemDTO dto = PersonagemFixture.novoDto("tereza","NINJA_DE_NINJUTSU",50,10,10, jutsu);
         ResponseEntity<PersonagemResponseDto> sut= template.postForEntity("/personagem",dto, PersonagemResponseDto.class);
 
         assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.CREATED);
@@ -85,12 +85,12 @@ public class PersonagemIt {
     @DisplayName("Deve deletar um personagem do banco.")
     void deveDeletarUmpersonagemDoBanco() {
         JutsuRequestDto jutsu = JutsuFixture.requestDto("soco",10,15);
-        NovoPersonagemDTO dto = PersonagemFixture.novoDto("Tereza","NINJA_DE_NINJUTSU",50,10,10, jutsu);
+        NovoPersonagemDTO dto = PersonagemFixture.novoDto("tereza","NINJA_DE_NINJUTSU",50,10,10, jutsu);
         PersonagemResponseDto personagem = (template.postForEntity("/personagem",dto, PersonagemResponseDto.class)).getBody();
         Long id = personagem.id();
 
         ResponseEntity<Void> resposta = template.exchange(
-                "/personagem/" + id+"/apagar",
+                "/personagem/" + id,
                 HttpMethod.DELETE,
                 null,
                 Void.class

@@ -24,29 +24,16 @@ public interface PersonagemMapper {
     default Personagem toEntity(NovoPersonagemDTO dto) {
         return switch (dto.categoriaNinja().toUpperCase()) {
             case "NINJA_DE_NINJUTSU" -> {
-                NinjaDeNinjutsu ninja = new NinjaDeNinjutsu();
-                copyCommonFields(dto, ninja);
-                yield ninja;
+                yield new NinjaDeNinjutsu().novoPersonagem(dto);
             }
             case "NINJA_DE_TAIJUTSU" -> {
-                NinjaDeTaijutsu ninja = new NinjaDeTaijutsu();
-                copyCommonFields(dto, ninja);
-                yield ninja;
+                yield new NinjaDeTaijutsu().novoPersonagem(dto);
             }
             case "NINJA_DE_GENJUTSU" -> {
-                NinjaDeGenjutsu ninja = new NinjaDeGenjutsu();
-                copyCommonFields(dto, ninja);
-                yield ninja;
+                yield new NinjaDeGenjutsu().novoPersonagem(dto);
             }
             default -> throw new IllegalArgumentException("Tipo inválido: " + dto.categoriaNinja());
         };
-    }
-
-    default void copyCommonFields(NovoPersonagemDTO dto, Personagem personagem) {
-        personagem.setNome(dto.nome());
-        personagem.setIdade(dto.idade());
-        personagem.aumentarVidas(dto.vida());
-        personagem.adicionarChakra(dto.chakra());
     }
 
     default String categoriaNinja(Personagem personagem) {

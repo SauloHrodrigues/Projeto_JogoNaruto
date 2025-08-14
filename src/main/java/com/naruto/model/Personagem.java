@@ -1,5 +1,6 @@
 package com.naruto.model;
 
+import com.naruto.dto.personagem.NovoPersonagemDTO;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.DiscriminatorColumn;
 import jakarta.persistence.Entity;
@@ -76,6 +77,14 @@ public abstract class Personagem {
 
     public void aumentarVidas(int vidas) {
         this.vida += vidas;
+    }
+
+    public Personagem novoPersonagem(NovoPersonagemDTO dto){
+        this.nome = dto.nome();
+        this.idade = dto.idade();
+        this.chakra = dto.chakra();
+        this.vida = dto.vida();
+        return this;
     }
 
     public abstract String usarJutsu(Jutsu jutsu, String nomeDoOponente);

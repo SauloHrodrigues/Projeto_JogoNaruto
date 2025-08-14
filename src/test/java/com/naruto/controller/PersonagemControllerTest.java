@@ -63,7 +63,7 @@ class PersonagemControllerTest {
     void setUp() {
         socoRequestDto = JutsuFixture.requestDto("soco",5,10);
         punhoSuaveRequestDto = JutsuFixture.requestDto("Punho Suave", 20, 30);
-        raseganRequestDto = JutsuFixture.requestDto("Rasengan", 10, 25);
+        raseganRequestDto = JutsuFixture.requestDto("rasengan", 10, 25);
 
         narutoRequestDto =  PersonagemFixture.novoDto("naruto uzumaki","NINJA_DE_NINJUTSU",10, 10,20,socoRequestDto);
         sasukeRequestDto = PersonagemFixture.novoDto( "sasuke uchiha", "NINJA_DE_TAIJUTSU",15,5, 10,socoRequestDto);
@@ -146,9 +146,9 @@ class PersonagemControllerTest {
         mockMvc.perform(post("/personagem/{id}/adicionar_jutsu",id).contentType(MediaType.APPLICATION_JSON)
                         .content(objectMapper.writeValueAsString(raseganRequestDto)))
                 .andExpect(status().isCreated())
-                .andExpect(jsonPath("$.jutsus.['Rasengan']").exists())
+                .andExpect(jsonPath("$.jutsus.['rasengan']").exists())
                 .andExpect(jsonPath("$.id",equalTo(resposta.id().intValue())))
-                .andExpect(jsonPath("$.jutsus.['Rasengan']").value(jutsu))
+                .andExpect(jsonPath("$.jutsus.['rasengan']").value(jutsu))
          ;
     }
 

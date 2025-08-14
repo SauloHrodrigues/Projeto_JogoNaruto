@@ -44,7 +44,7 @@ public class PersonagemController {
         return ResponseEntity.status(HttpStatus.CREATED).body(personagemComNovoJutsu);
     }
 
-    @DeleteMapping("/{id}/apagar")
+    @DeleteMapping("/{id}")
     public ResponseEntity<PersonagemResponseDto> apagar (@PathVariable Long id) {
         service.apagar(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
