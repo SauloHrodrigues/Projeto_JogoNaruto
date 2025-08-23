@@ -1,5 +1,6 @@
 package com.naruto.controller;
 
+import com.naruto.controller.interfaces_docs_swagger.PersonagemSwaggerDoc;
 import com.naruto.dto.jutsu.JutsuRequestDto;
 import com.naruto.dto.personagem.NovoPersonagemDTO;
 import com.naruto.dto.personagem.PersonagemResponseDto;
@@ -21,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/personagem")
-public class PersonagemController {
+public class PersonagemController implements PersonagemSwaggerDoc {
 
 
     private final PersonagemService service;

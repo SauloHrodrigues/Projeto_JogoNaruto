@@ -40,7 +40,8 @@ public class PersonagemIt {
     public void deveCriarUmPersonagemComSucesso(){
         JutsuRequestDto jutsu = JutsuFixture.requestDto("soco",10,15);
         NovoPersonagemDTO dto = PersonagemFixture.novoDto("tereza","NINJA_DE_NINJUTSU",50,10,10, jutsu);
-        ResponseEntity<PersonagemResponseDto> sut= template.postForEntity("/personagem",dto, PersonagemResponseDto.class);
+        ResponseEntity<PersonagemResponseDto> sut= template.postForEntity("/personagem",dto,
+                PersonagemResponseDto.class);
 
         assertThat(sut.getStatusCode()).isEqualTo(HttpStatus.CREATED);
         assertThat(sut.getBody().id()).isNotNull();
